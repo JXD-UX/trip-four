@@ -1,0 +1,1143 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>北欧旅行计划 · Travel OS</title>
+  <style>
+    :root{
+      --bg:#f5f6f8;--panel:#fff;--text:#101317;--muted:#727985;--line:#e7e9ed;
+      --soft:#f8f9fb;--dark:#111318;--radius:22px;--shadow:0 12px 34px rgba(16,19,23,.07)
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Microsoft YaHei","Segoe UI",sans-serif}
+    button,input,textarea,select{font:inherit}
+    button{cursor:pointer}
+    a{color:inherit}
+    .app{max-width:1480px;margin:auto;min-height:100vh;display:grid;grid-template-columns:276px 1fr}
+    .sidebar{position:sticky;top:0;height:100vh;background:var(--dark);color:#fff;padding:28px 20px;display:flex;flex-direction:column}
+    .brand{font-size:12px;letter-spacing:.18em;color:#9299a5;text-transform:uppercase}
+    .trip-title{font-size:29px;font-weight:780;margin:10px 0 5px}
+    .trip-sub{color:#9aa1ac;font-size:13px}
+    .nav{display:grid;gap:7px;margin-top:34px}
+    .nav button{border:0;background:transparent;color:#c8ced8;text-align:left;padding:13px 14px;border-radius:13px;font-weight:650}
+    .nav button.active,.nav button:hover{background:#20242c;color:#fff}
+    .sidebar-tools{display:grid;gap:8px;margin-top:auto}
+    .side-btn{border:1px solid #30353f;background:transparent;color:#cbd1da;border-radius:12px;padding:10px 12px;text-align:left}
+    .side-footer{color:#7f8794;font-size:11px;line-height:1.65;margin-top:14px}
+    main{padding:30px 32px 72px;min-width:0}
+    .topbar{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:25px}
+    .topbar h1{font-size:31px;margin:0}
+    .topbar p{margin:7px 0 0;color:var(--muted);font-size:14px}
+    .actions{display:flex;gap:9px;flex-wrap:wrap}
+    .primary,.secondary,.ghost,.danger{border-radius:13px;padding:11px 14px;font-weight:700}
+    .primary{border:0;background:var(--dark);color:#fff}
+    .secondary{border:1px solid var(--line);background:#fff;color:var(--text)}
+    .ghost{border:0;background:var(--soft);color:var(--text)}
+    .danger{border:1px solid #ead4d4;background:#fffafa;color:#9b2929}
+    .view{display:none}.view.active{display:block}
+    .grid{display:grid;gap:17px}
+    .stats{grid-template-columns:repeat(5,minmax(0,1fr))}
+    .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .stat{padding:18px}.stat b{display:block;font-size:30px;margin-bottom:5px}.stat span{color:var(--muted);font-size:13px}
+    .section{margin-top:19px;padding:22px}
+    .section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+    .section h2{font-size:19px;margin:0}.section small{color:var(--muted)}
+    .route{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .stop{padding:16px;border-radius:16px;background:var(--soft);border:1px solid var(--line)}
+    .stop .date{font-size:12px;color:var(--muted)}.stop h3{margin:8px 0 2px;font-size:18px}.stop p{margin:0;color:var(--muted);font-size:13px}
+    .next-card{padding:22px;display:grid;grid-template-columns:115px 1fr;gap:18px}
+    .date-box{background:var(--dark);color:#fff;border-radius:18px;padding:18px;text-align:center}
+    .date-box b{display:block;font-size:34px}.date-box span{font-size:12px;color:#cad0da}
+    .quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .quick-item{border:1px solid var(--line);border-radius:16px;padding:16px;background:var(--soft)}
+    .quick-item b{display:block;margin-bottom:5px}.quick-item span{font-size:13px;color:var(--muted)}
+    .date-tabs{display:flex;gap:8px;overflow:auto;padding-bottom:5px;margin-bottom:16px}
+    .date-tab{white-space:nowrap;border:1px solid var(--line);background:#fff;border-radius:13px;padding:9px 12px;font-weight:650;color:#59606b}
+    .date-tab.active{background:var(--dark);color:#fff;border-color:var(--dark)}
+    .day-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:18px}
+    .day-title h2{font-size:22px;margin:0 0 5px}.day-title p{margin:0;color:var(--muted);font-size:13px}
+    .timeline{display:grid;gap:0}
+    .time-row{display:grid;grid-template-columns:82px 1fr;gap:14px;align-items:start}
+    .time{color:var(--muted);font-weight:700;padding-top:3px}
+    .event{border-left:2px solid #d9dde3;padding:0 0 22px 18px;position:relative}
+    .event:before{content:"";width:10px;height:10px;border-radius:50%;background:var(--dark);position:absolute;left:-6px;top:5px}
+    .event h3{margin:0 0 5px;font-size:17px}
+    .event p{margin:0;color:var(--muted);font-size:14px;line-height:1.55}
+    .event-tags{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 4px}
+    .event-tag{display:inline-flex;align-items:center;border:1px solid #ffd5dc;border-radius:999px;background:#fff6f7;color:#a1263e;padding:5px 8px;font-size:11px;font-weight:750;line-height:1.25}
+    .event-note{margin-top:8px!important;padding:9px 10px;border-left:3px solid #ff9aaa;border-radius:0 8px 8px 0;background:#fff7f8;color:#5e3038!important;font-size:13px!important;line-height:1.55!important}
+    .event-note b{font-weight:800;color:#a1263e}
+    .day-advice{display:grid;gap:8px;margin:0 0 20px;padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:var(--soft)}
+    .day-advice[hidden]{display:none}
+    .day-advice h3{margin:0;font-size:14px}
+    .day-advice p{margin:0;color:#4f4f4f;font-size:13px;line-height:1.55;overflow-wrap:anywhere}
+    .event-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+    .micro{padding:7px 9px;border-radius:10px;border:1px solid var(--line);background:#fff;font-size:12px;font-weight:650}
+    .planb{border-style:dashed;box-shadow:none}
+    .places-toolbar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:18px}
+    .search{flex:1;min-width:240px;border:1px solid var(--line);background:#fff;border-radius:13px;padding:12px 14px}
+    .filter{border:1px solid var(--line);background:#fff;border-radius:13px;padding:10px 12px}
+    .places-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
+    .place{overflow:hidden;transition:.18s transform ease}.place:hover{transform:translateY(-2px)}
+    .cover{height:190px;background:linear-gradient(135deg,#d6d9de,#a8adb5);background-size:cover;background-position:center}
+    .place-body{padding:16px}.meta{font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+    .place h3{margin:7px 0 6px;font-size:18px}.place p{margin:0 0 13px;color:var(--muted);font-size:14px;line-height:1.5}
+    .place-foot{display:flex;justify-content:space-between;align-items:center;gap:8px}
+    .link-btn{border:0;background:transparent;font-weight:750;padding:0}.note-count{font-size:12px;color:var(--muted)}
+    .tag-row{display:flex;gap:6px;flex-wrap:wrap;margin:11px 0 0}
+    .tag{font-size:11px;background:var(--soft);border:1px solid var(--line);padding:5px 7px;border-radius:999px;color:#555d68}
+
+    .logistics-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .log-card{padding:17px;border:1px solid var(--line);border-radius:17px;background:#fff}
+    .log-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+    .log-type{display:inline-flex;padding:5px 8px;border-radius:999px;background:#f1f3f6;color:#4f5661;font-size:11px;font-weight:750}
+    .log-card h3{margin:9px 0 5px;font-size:17px}.log-route{font-weight:700;line-height:1.5}
+    .log-time,.log-detail{font-size:13px;color:var(--muted);line-height:1.6;margin-top:5px}
+    .stay-bar{margin-top:17px;padding:14px 15px;border-radius:15px;background:var(--soft);border:1px solid var(--line);font-size:13px;line-height:1.6}
+    .event.special{border-left-color:#9ba3af}.event.special:before{background:#fff;border:2px solid #111318;width:11px;height:11px;left:-7px}
+    .event-kind{display:inline-flex;margin-bottom:7px;padding:4px 7px;border-radius:999px;background:#f1f3f6;color:#555d68;font-size:10px;font-weight:800;letter-spacing:.05em}
+
+    .expense-summary{grid-template-columns:repeat(4,1fr)}
+    .money{font-size:28px;font-weight:800}
+    .expense-table{width:100%;border-collapse:collapse}
+    .expense-table th,.expense-table td{text-align:left;padding:13px 10px;border-bottom:1px solid var(--line);font-size:14px}
+    .expense-table th{color:var(--muted);font-size:12px}.table-action{border:0;background:transparent;color:#8b3434;font-weight:650}
+    .drawer{position:fixed;inset:0;display:none;z-index:50}.drawer.open{display:block}
+    .drawer-backdrop{position:absolute;inset:0;background:rgba(15,17,21,.4)}
+    .drawer-panel{position:absolute;right:0;top:0;height:100%;width:min(740px,100%);background:#fff;overflow:auto;box-shadow:-20px 0 70px rgba(0,0,0,.18)}
+    .drawer-cover{height:320px;background:linear-gradient(135deg,#d6d9de,#a8adb5);background-size:cover;background-position:center;position:relative}
+    .close{position:absolute;right:20px;top:20px;width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.94);font-size:20px}
+    .drawer-content{padding:28px}.drawer-content h2{font-size:30px;margin:0 0 8px}.subline{color:var(--muted);line-height:1.6}
+    .map-link{display:inline-flex;margin-top:15px;background:var(--dark);color:#fff;text-decoration:none;padding:11px 14px;border-radius:12px;font-weight:750}
+    .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
+    .detail-box{padding:15px;border:1px solid var(--line);border-radius:15px;background:var(--soft)}
+    .detail-box label{display:block;color:var(--muted);font-size:11px;margin-bottom:6px}.detail-box b{font-size:14px}
+    .content-block{margin-top:25px}.content-block h3{margin:0 0 11px}.content-block p,.content-block li{color:#353b44;line-height:1.7}
+    .note-blocks{display:grid;gap:12px}
+    .note-block{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff}
+    .note-block img{width:100%;max-height:360px;object-fit:cover;display:block}
+    .note-text{padding:14px 15px;line-height:1.7;color:#343a43;white-space:pre-wrap}
+    .note-caption{padding:10px 14px;color:var(--muted);font-size:13px;background:var(--soft);border-top:1px solid var(--line)}
+    .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .gallery img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:14px;border:1px solid var(--line)}
+    .checklist{display:grid;gap:8px}.checklist label{display:flex;gap:9px;align-items:flex-start;padding:10px 12px;background:var(--soft);border-radius:12px}
+    .drawer-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:26px}
+    .modal{position:fixed;inset:0;display:none;z-index:70;background:rgba(15,17,21,.43);align-items:center;justify-content:center;padding:18px}
+    .modal.open{display:flex}.modal-card{width:min(800px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:24px;padding:22px}
+    .modal-card.small{width:min(560px,100%)}
+    .modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}.modal-head h2{margin:0}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.full{grid-column:1/-1}
+    .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+    .field input,.field textarea,.field select{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px 12px;background:#fff}
+    .field textarea{min-height:90px;resize:vertical}
+    .helper{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.5}
+    .form-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}
+    .empty{padding:42px;text-align:center;color:var(--muted)}
+
+    .fx-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+    .fx-item{padding:14px;border:1px solid var(--line);border-radius:15px;background:var(--soft)}
+    .fx-item label{display:block;font-size:12px;color:var(--muted);margin-bottom:7px}
+    .fx-row{display:flex;align-items:center;gap:7px}
+    .fx-item input{width:100%;min-width:0;border:1px solid var(--line);border-radius:10px;padding:9px 10px;background:#fff;font-weight:700}
+    .fx-unit{white-space:nowrap;font-size:12px;color:var(--muted)}
+    .currency-badge{display:inline-flex;padding:4px 7px;border-radius:999px;background:#f1f3f6;font-size:11px;font-weight:750}
+    .settlement-list{display:grid;gap:10px}
+    .settlement-row{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:13px 14px;border:1px solid var(--line);border-radius:14px;background:var(--soft)}
+    .settlement-row b{font-size:14px}.settlement-row span{font-size:13px;color:var(--muted)}
+    .people-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+    .person-check{display:flex;align-items:center;gap:8px;padding:10px 11px;border:1px solid var(--line);border-radius:12px;background:#fff}
+    .rmb-note{font-size:12px;color:var(--muted);margin-top:4px}
+
+    .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;background:#111318;color:#fff;padding:11px 15px;border-radius:12px;font-size:13px;transition:.2s;z-index:100}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    @media(max-width:1120px){.stats{grid-template-columns:repeat(3,1fr)}.places-grid{grid-template-columns:repeat(2,1fr)}.expense-summary{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:820px){
+      .app{grid-template-columns:1fr}.sidebar{position:static;height:auto;padding:20px}.nav{grid-template-columns:repeat(5,1fr);margin-top:20px}.nav button{text-align:center;padding:10px 8px}.sidebar-tools,.side-footer{display:none}
+      main{padding:20px}.topbar{align-items:flex-start}.stats{grid-template-columns:repeat(2,1fr)}.route{grid-template-columns:repeat(2,1fr)}
+      .places-grid{grid-template-columns:1fr}.quick-grid{grid-template-columns:1fr}.logistics-grid{grid-template-columns:1fr}.fx-grid{grid-template-columns:repeat(2,1fr)}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.detail-grid{grid-template-columns:1fr}
+      .next-card{grid-template-columns:90px 1fr}.gallery{grid-template-columns:repeat(2,1fr)}.people-grid{grid-template-columns:1fr}
+    }
+    /* Warm marketplace-inspired surface system and touch-safe controls. */
+    :root{
+      --bg:#f7f7f5;--panel:#fff;--text:#222;--muted:#6a6a6a;--line:#e7e7e4;
+      --soft:#f7f7f7;--dark:#222;--accent:#ff385c;--accent-active:#e00b41;
+      --radius:16px;--shadow:0 8px 24px rgba(34,34,34,.06)
+    }
+    body{background:var(--bg);color:var(--text);overflow-x:hidden;font-size:15px}
+    button,input,textarea,select{font-size:16px}
+    button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid rgba(255,56,92,.35);outline-offset:2px}
+    .app{max-width:1440px;grid-template-columns:240px 1fr}
+    .sidebar{background:#fff;color:var(--text);border-right:1px solid var(--line);padding:28px 18px}
+    .brand{color:var(--accent);font-weight:800;letter-spacing:.14em}
+    .trip-title{color:var(--text);font-size:27px;letter-spacing:-.02em}
+    .trip-sub{color:var(--muted);line-height:1.5}
+    .nav{gap:5px;margin-top:30px}
+    .nav button{color:#6a6a6a;padding:12px 13px;border-radius:10px;font-size:14px;transition:background .18s ease,color .18s ease,transform .18s ease}
+    .nav button.active,.nav button:hover{background:#fff0f2;color:var(--accent);transform:translateX(2px)}
+    .sidebar-tools{gap:7px}
+    .side-btn{border-color:var(--line);color:#555;background:#fff}
+    .side-btn:hover{border-color:#ffb6c3;background:#fff7f8;color:var(--accent)}
+    .side-footer{color:#929292}
+    main{padding:34px 38px 82px}
+    .topbar h1{font-size:30px;letter-spacing:-.02em}
+    .topbar p{color:var(--muted);line-height:1.55}
+    .primary{background:var(--accent);border-radius:10px;box-shadow:0 4px 10px rgba(255,56,92,.18)}
+    .primary:hover{background:var(--accent-active)}
+    .secondary,.ghost,.danger{border-radius:10px}
+    .secondary:hover,.ghost:hover{border-color:#ffb6c3;background:#fff7f8}
+    .card{border-color:var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .section{padding:24px}
+    .section h2{font-size:18px;letter-spacing:-.01em}
+    .stat{padding:20px}.stat b{font-size:28px}.stat span{line-height:1.45}
+    .stop,.quick-item,.log-card,.fx-item,.detail-box{border-color:var(--line);border-radius:12px;background:#fff}
+    .stop:hover,.quick-item:hover,.log-card:hover{border-color:#ffc2cc;box-shadow:0 5px 14px rgba(34,34,34,.05)}
+    .date-box{background:var(--accent);border-radius:14px}
+    .date-tab{border-radius:999px;padding:10px 15px}
+    .date-tab.active{background:var(--accent);border-color:var(--accent)}
+    .event:before{background:var(--accent)}
+    .event.special:before{border-color:var(--accent);background:#fff}
+    .micro{border-radius:999px;padding:8px 11px}
+    .search,.filter,.field input,.field textarea,.field select,.fx-item input{border-radius:10px;border-color:var(--line)}
+    .search:focus,.filter:focus,.field input:focus,.field textarea:focus,.field select:focus,.fx-item input:focus{border-color:#ff9aaa;box-shadow:0 0 0 3px rgba(255,56,92,.12);outline:0}
+    .cover{height:196px;background:linear-gradient(135deg,#e8e8e5,#c9c9c4)}
+    .place h3{font-size:17px;line-height:1.35}
+    .tag{background:#fff6f7;border-color:#ffd5dc;color:#a1263e}
+    .log-type,.event-kind,.currency-badge{background:#fff0f2;color:#a1263e}
+    .map-link{background:var(--accent);border-radius:10px}
+    .drawer-panel{box-shadow:-16px 0 44px rgba(34,34,34,.14)}
+    .drawer-cover{height:300px;background:linear-gradient(135deg,#e8e8e5,#c9c9c4)}
+    .close{width:44px;height:44px}
+    .modal-card{border-radius:18px}
+    .toast{background:var(--text)}
+    .expense-table{min-width:760px}
+
+    @media(max-width:820px){
+      body{padding-bottom:76px}
+      .app{display:block}
+      .sidebar{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:40;height:auto;padding:8px 10px calc(8px + env(safe-area-inset-bottom));border-right:0;border-top:1px solid var(--line);box-shadow:0 -8px 24px rgba(34,34,34,.08)}
+      .brand,.trip-title,.trip-sub,.sidebar-tools,.side-footer{display:none}
+      .nav{display:flex;gap:4px;margin:0;overflow-x:auto;scrollbar-width:none}
+      .nav::-webkit-scrollbar{display:none}
+      .nav button{flex:1 0 64px;min-height:48px;padding:8px 6px;border-radius:10px;text-align:center;font-size:12px;font-weight:700;white-space:nowrap}
+      .nav button.active,.nav button:hover{transform:none}
+      main{padding:20px 14px 28px}
+      .topbar{display:flex;flex-direction:column;gap:14px;margin-bottom:20px}
+      .topbar h1{font-size:26px;line-height:1.2}
+      .topbar p{font-size:14px;margin-top:6px}
+      .actions{width:100%}.actions button{flex:1;min-height:46px}
+      .stats,.expense-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+      #balanceSummary{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+      .stat{padding:15px}.stat b{font-size:25px}.stat span{font-size:12px}
+      .section{padding:17px;margin-top:14px}
+      .section-head{align-items:flex-start;margin-bottom:13px}.section-head small{font-size:12px;line-height:1.4;text-align:right}
+      .route{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.stop{padding:13px}.stop h3{font-size:16px}.stop p{font-size:12px;line-height:1.45}
+      .next-card{grid-template-columns:74px 1fr;gap:12px;padding:16px;margin-top:14px!important}.date-box{padding:13px 8px}.date-box b{font-size:28px}.date-box span{font-size:11px}
+      .next-card h2{font-size:19px;line-height:1.3}.next-card p{font-size:13px;line-height:1.55}
+      .date-tabs{margin-right:-2px;padding-bottom:8px}.date-tab{padding:9px 13px;font-size:13px}
+      .day-head{flex-direction:column;gap:10px}.day-title h2{font-size:20px}.time-row{grid-template-columns:56px minmax(0,1fr);gap:10px}.time{font-size:13px}.event{padding-left:14px;padding-bottom:18px}.event h3{font-size:16px;line-height:1.4}.event p{font-size:13px}
+      .day-advice{padding:13px;margin-bottom:16px}
+      .places-toolbar{gap:8px;margin-bottom:14px}.search{flex-basis:100%;min-width:0}.filter{flex:1;min-width:0;min-height:44px}.places-grid{gap:12px}.cover{height:170px}.place-body{padding:15px}
+      .logistics-grid,.quick-grid,.fx-grid,.detail-grid,.form-grid{grid-template-columns:1fr}.fx-grid{gap:8px}
+      .drawer-panel{width:100%}.drawer-cover{height:210px}.drawer-content{padding:20px}.drawer-content h2{font-size:25px;line-height:1.25}.detail-box b{font-size:14px;line-height:1.5}.drawer-actions{gap:8px}.drawer-actions button,.drawer-actions a{min-height:44px}
+      .modal{padding:10px}.modal-card{padding:17px;border-radius:16px;max-height:calc(100dvh - 20px)}.modal-head h2{font-size:20px}.form-actions{flex-direction:column-reverse}.form-actions button{width:100%;min-height:46px}
+      .people-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.person-check{min-height:44px}
+      .expense-table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}.expense-table th,.expense-table td{padding:12px 9px}
+      .settlement-row{align-items:flex-start;flex-direction:column;gap:4px}
+    }
+    @media(max-width:480px){
+      .route{grid-template-columns:1fr}.stats,.expense-summary{gap:8px}#balanceSummary{grid-template-columns:1fr!important}.stat span{font-size:11px}.quick-item{padding:14px}.section-head{flex-direction:column}.section-head small{text-align:left}.people-grid{grid-template-columns:1fr 1fr}.tag{font-size:10px}
+    }
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}.place:hover,.nav button:hover{transform:none}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">旅行计划工具</div>
+    <div class="trip-title">北欧 2026</div>
+    <div class="trip-sub">9 月 30 日 — 10 月 9 日 · 洋仔 / 星 / 敏姐 / Lynn</div>
+    <div class="nav">
+      <button class="active" data-view="overview">总览</button>
+      <button data-view="itinerary">行程</button>
+      <button data-view="places">地点</button>
+      <button data-view="logistics">交通住宿</button>
+      <button data-view="expenses">费用</button>
+    </div>
+    <div class="sidebar-tools">
+      <button class="side-btn" onclick="exportData()">导出旅行数据</button>
+      <button class="side-btn" onclick="resetDemo()">恢复示例数据</button>
+    </div>
+    <div class="side-footer">地点、笔记、行程、费用与汇率保存在当前浏览器。<br/>费用最终统一按人民币结算。</div>
+  </aside>
+
+  <main>
+    <section id="overview" class="view active">
+      <div class="topbar">
+        <div><h1>旅行总览</h1><p>快速查看路线、旅行规模、下一段行程和待处理内容。</p></div>
+        <div class="actions"><button class="primary" onclick="openPlaceModal()">＋ 添加地点</button></div>
+      </div>
+      <div class="grid stats">
+        <div class="card stat"><b>10</b><span>旅行天数</span></div>
+        <div class="card stat"><b>4</b><span>同行人数 · 洋仔 / 星 / 敏姐 / Lynn</span></div>
+        <div class="card stat"><b>3</b><span>主要城市</span></div>
+        <div class="card stat"><b id="placeCount">0</b><span>已收集地点</span></div>
+        <div class="card stat"><b id="noteCount">0</b><span>图文笔记</span></div>
+      </div>
+
+      <div class="card section">
+        <div class="section-head"><h2>旅行路线</h2><small>城市级路线概览</small></div>
+        <div class="route">
+          <div class="stop"><div class="date">9 月 30 日 – 10 月 3 日</div><h3>哥本哈根</h3><p>3 晚 · Hotel Hans</p></div>
+          <div class="stop"><div class="date">10 月 3 日 16:30</div><h3>过夜邮轮</h3><p>M/S Nordic Crown · 前往奥斯陆</p></div>
+          <div class="stop"><div class="date">10 月 4 日 – 10 月 6 日</div><h3>奥斯陆</h3><p>2 晚 · Hobo Oslo</p></div>
+          <div class="stop"><div class="date">10 月 6 日 – 10 月 9 日</div><h3>斯德哥尔摩</h3><p>3 晚 · Sheraton Stockholm Hotel</p></div>
+        </div>
+      </div>
+
+      <div class="card next-card" style="margin-top:19px">
+        <div class="date-box"><span>10 月</span><b>01</b><span>哥本哈根</span></div>
+        <div>
+          <div class="meta">下一段重点行程</div>
+          <h2 style="margin:7px 0 9px">哥本哈根城市游览</h2>
+          <p style="color:var(--muted);margin:0 0 14px">新港 → 腓特烈教堂 → 阿美琳堡宫区域 → 丹麦艺术与设计博物馆 → 小美人鱼</p>
+          <button class="secondary" onclick="switchView('itinerary')">查看当天行程 →</button>
+        </div>
+      </div>
+
+
+      <div class="card section">
+        <div class="section-head"><h2>核心交通与住宿</h2><small>飞机 · 邮轮 · 火车 · 酒店</small></div>
+        <div id="overviewLogistics" class="logistics-grid"></div>
+      </div>
+
+      <div class="card section">
+        <div class="section-head"><h2>旅行前快速检查</h2><small>把容易遗漏的事项放在总览，不做预订状态</small></div>
+        <div class="quick-grid">
+          <div class="quick-item"><b>交通时间</b><span>确认跨城火车、机场到酒店等硬时间。</span></div>
+          <div class="quick-item"><b>营业与闭馆</b><span>出发前再次核对博物馆开放时间与节假日。</span></div>
+          <div class="quick-item"><b>天气 Plan B</b><span>为城市 Walk 等户外行程准备室内替代方案。</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="itinerary" class="view">
+      <div class="topbar">
+        <div><h1>每日行程</h1><p>以“天”为单位查看景点、航班、邮轮、火车与当晚住宿。</p></div>
+        <div class="actions"><button class="primary" onclick="openPlaceModal()">＋ 添加行程地点</button></div>
+      </div>
+      <div class="date-tabs" id="dateTabs"></div>
+      <div class="card section" style="margin-top:0">
+        <div class="day-head">
+          <div class="day-title"><h2 id="dayTitle">—</h2><p id="daySub">—</p></div>
+          <button class="secondary" onclick="switchView('places')">打开地点库</button>
+        </div>
+        <div class="day-advice" id="dayAdvice" hidden></div>
+        <div class="timeline" id="timeline"></div>
+      </div>
+    </section>
+
+    <section id="places" class="view">
+      <div class="topbar">
+        <div><h1>地点库</h1><p>旅行计划的内容中心：地点、攻略、图片、清单、Google Maps 与预约状态都在这里。</p></div>
+        <div class="actions"><button class="primary" onclick="openPlaceModal()">＋ 添加地点</button></div>
+      </div>
+      <div class="places-toolbar">
+        <input class="search" id="searchInput" placeholder="搜索地点、备注或标签…" oninput="renderPlaces()"/>
+        <select class="filter" id="categoryFilter" onchange="renderPlaces()">
+          <option value="all">全部类型</option><option>博物馆</option><option>建筑</option><option>咖啡</option><option>餐厅</option><option>购物</option><option>景观</option><option>其他</option>
+        </select>
+        <select class="filter" id="cityFilter" onchange="renderPlaces()">
+          <option value="all">全部城市</option><option>哥本哈根</option><option>奥斯陆</option><option>斯德哥尔摩</option>
+        </select>
+      </div>
+      <div class="places-grid" id="placesGrid"></div>
+    </section>
+
+
+    <section id="logistics" class="view">
+      <div class="topbar">
+        <div><h1>交通与住宿</h1><p>集中查看航班、过夜邮轮、跨城火车和三段酒店住宿。</p></div>
+      </div>
+      <div id="logisticsContent"></div>
+    </section>
+
+    <section id="expenses" class="view">
+      <div class="topbar">
+        <div><h1>旅行费用</h1><p>支持人民币、丹麦克朗、瑞典克朗和挪威克朗；所有费用最终统一折算为人民币结算。</p></div>
+        <div class="actions"><button class="primary" onclick="openExpenseModal()">＋ 记一笔</button></div>
+      </div>
+
+      <div class="grid expense-summary">
+        <div class="card stat"><span>人民币总支出</span><div class="money" id="totalExpense">¥0</div></div>
+        <div class="card stat"><span>人均参考</span><div class="money" id="perPerson">¥0</div></div>
+        <div class="card stat"><span>费用记录</span><div class="money" id="expenseCount">0</div></div>
+        <div class="card stat"><span>最大分类</span><div class="money" id="topCategory">—</div></div>
+      </div>
+
+      <div class="card section">
+        <div class="section-head">
+          <div><h2>汇率设置</h2><small>统一按「1 单位外币 = 多少人民币」计算；旅行时可随时手动更新</small></div>
+          <button class="secondary" onclick="resetFxRates()">恢复默认</button>
+        </div>
+        <div class="fx-grid">
+          <div class="fx-item">
+            <label>人民币 CNY</label>
+            <div class="fx-row"><input value="1" disabled><span class="fx-unit">= ¥1.0000</span></div>
+          </div>
+          <div class="fx-item">
+            <label>丹麦克朗 DKK</label>
+            <div class="fx-row"><input id="fxDKK" type="number" min="0" step="0.0001" onchange="saveFxRates()"><span class="fx-unit">CNY / DKK</span></div>
+          </div>
+          <div class="fx-item">
+            <label>瑞典克朗 SEK</label>
+            <div class="fx-row"><input id="fxSEK" type="number" min="0" step="0.0001" onchange="saveFxRates()"><span class="fx-unit">CNY / SEK</span></div>
+          </div>
+          <div class="fx-item">
+            <label>挪威克朗 NOK</label>
+            <div class="fx-row"><input id="fxNOK" type="number" min="0" step="0.0001" onchange="saveFxRates()"><span class="fx-unit">CNY / NOK</span></div>
+          </div>
+        </div>
+        <div class="helper">汇率会保存在当前浏览器中。建议出发前或旅行期间按实际银行卡 / 支付渠道汇率更新，这样最终人民币结算更接近真实支出。</div>
+      </div>
+
+      <div class="card section">
+        <div class="section-head"><h2>费用明细</h2><small>保留原币金额，同时显示人民币折算值</small></div>
+        <table class="expense-table">
+          <thead><tr><th>日期</th><th>分类</th><th>项目</th><th>付款人</th><th>参与人</th><th>原币金额</th><th>人民币</th><th></th></tr></thead>
+          <tbody id="expenseBody"></tbody>
+        </table>
+      </div>
+
+      <div class="card section">
+        <div class="section-head"><div><h2>最终人民币结算</h2><small>基于每笔费用的付款人和参与人自动计算</small></div></div>
+        <div id="balanceSummary" class="grid stats" style="grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:16px"></div>
+        <div id="settlementList" class="settlement-list"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="drawer" id="drawer">
+  <div class="drawer-backdrop" onclick="closeDrawer()"></div>
+  <div class="drawer-panel">
+    <div class="drawer-cover" id="drawerCover"><button class="close" onclick="closeDrawer()">×</button></div>
+    <div class="drawer-content" id="drawerContent"></div>
+  </div>
+</div>
+
+<div class="modal" id="placeModal">
+  <div class="modal-card">
+    <div class="modal-head"><h2 id="placeModalTitle">添加地点</h2><button class="secondary" onclick="closePlaceModal()">关闭</button></div>
+    <div class="form-grid">
+      <input id="editingId" type="hidden"/>
+      <div class="field"><label>地点名称 *</label><input id="fName" placeholder="例如：丹麦设计博物馆"/></div>
+      <div class="field"><label>城市</label><select id="fCity"><option>哥本哈根</option><option>奥斯陆</option><option>斯德哥尔摩</option></select></div>
+      <div class="field"><label>类型</label><select id="fCategory"><option>博物馆</option><option>建筑</option><option>咖啡</option><option>餐厅</option><option>购物</option><option>景观</option><option>其他</option></select></div>
+      <div class="field"><label>建议停留</label><input id="fDuration" placeholder="例如：1.5–2 小时"/></div>
+      <div class="field"><label>日期</label><input id="fDate" type="date"/></div>
+      <div class="field"><label>时间</label><input id="fTime" type="time"/></div>
+      <div class="field full"><label>Google Maps 链接</label><input id="fMaps" placeholder="可粘贴 Google Maps 分享链接；留空会自动生成搜索链接"/></div>
+      <div class="field full"><label>地址</label><input id="fAddress" placeholder="例如：Bredgade 68, Copenhagen"/></div>
+      <div class="field full"><label>为什么去 / 这个地点的价值</label><textarea id="fWhy" placeholder="写下最核心的理由，便于旅行现场快速回忆。"></textarea></div>
+      <div class="field full"><label>标签</label><input id="fTags" placeholder="例如：设计, 家具, 必看, 室内"/></div>
+      <div class="field full"><label>快捷备注（每行一条）</label><textarea id="fNotes" placeholder="重点看家具展厅&#10;Museum Shop 留 20 分钟&#10;下午光线更好"></textarea></div>
+      <div class="field full"><label>相册图片 URL（每行一张）</label><textarea id="fImages" placeholder="https://...&#10;https://..."></textarea></div>
+      <div class="field full"><label>现场 Checklist（每行一条）</label><textarea id="fChecklist" placeholder="看家具展厅&#10;买明信片&#10;拍入口建筑"></textarea></div>
+    </div>
+    <div class="form-actions"><button class="secondary" onclick="closePlaceModal()">取消</button><button class="primary" onclick="savePlace()">保存地点</button></div>
+  </div>
+</div>
+
+<div class="modal" id="noteModal">
+  <div class="modal-card small">
+    <div class="modal-head"><h2>添加图文笔记</h2><button class="secondary" onclick="closeNoteModal()">关闭</button></div>
+    <input id="notePlaceId" type="hidden"/>
+    <div class="field"><label>笔记类型</label><select id="noteType" onchange="toggleNoteFields()"><option value="text">文字</option><option value="image">图片 + 说明</option></select></div>
+    <div class="field" style="margin-top:12px" id="noteImageField"><label>图片 URL</label><input id="noteImage" placeholder="https://..."/></div>
+    <div class="field" style="margin-top:12px"><label id="noteTextLabel">笔记内容</label><textarea id="noteText" placeholder="记录攻略、看点、现场提醒……"></textarea></div>
+    <div class="form-actions"><button class="secondary" onclick="closeNoteModal()">取消</button><button class="primary" onclick="saveNoteBlock()">添加</button></div>
+  </div>
+</div>
+
+<div class="modal" id="expenseModal">
+  <div class="modal-card small">
+    <div class="modal-head"><h2>记一笔费用</h2><button class="secondary" onclick="closeExpenseModal()">关闭</button></div>
+    <div class="form-grid">
+      <div class="field"><label>日期</label><input id="eDate" type="date" value="2026-10-01"/></div>
+      <div class="field"><label>分类</label><select id="eCategory"><option>交通</option><option>住宿</option><option>餐饮</option><option>咖啡</option><option>门票</option><option>购物</option><option>其他</option></select></div>
+      <div class="field full"><label>项目</label><input id="eItem" placeholder="例如：博物馆门票"/></div>
+      <div class="field"><label>付款人</label>
+        <select id="ePaidBy"><option>洋仔</option><option>星</option><option>敏姐</option><option>Lynn</option></select>
+      </div>
+      <div class="field"><label>币种</label>
+        <select id="eCurrency" onchange="updateExpensePreview()">
+          <option value="CNY">人民币 CNY</option>
+          <option value="DKK">丹麦克朗 DKK</option>
+          <option value="SEK">瑞典克朗 SEK</option>
+          <option value="NOK">挪威克朗 NOK</option>
+        </select>
+      </div>
+      <div class="field full"><label>金额</label><input id="eAmount" type="number" min="0" step="0.01" placeholder="0" oninput="updateExpensePreview()"/><div id="expensePreview" class="helper">折算人民币：¥0.00</div></div>
+      <div class="field full">
+        <label>参与分摊的人</label>
+        <div class="people-grid">
+          <label class="person-check"><input type="checkbox" class="participant" value="洋仔" checked> 洋仔</label>
+          <label class="person-check"><input type="checkbox" class="participant" value="星" checked> 星</label>
+          <label class="person-check"><input type="checkbox" class="participant" value="敏姐" checked> 敏姐</label>
+          <label class="person-check"><input type="checkbox" class="participant" value="Lynn" checked> Lynn</label>
+        </div>
+        <div class="helper">默认 4 人均摊；某笔费用只有部分人参与时可取消勾选。</div>
+      </div>
+    </div>
+    <div class="form-actions"><button class="secondary" onclick="closeExpenseModal()">取消</button><button class="primary" onclick="saveExpense()">保存</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY='travel_places_v3_itinerary_cn';
+const EXP_KEY='travel_expenses_v3_itinerary_cn';
+
+const defaultPlaces=[{"id":"nyhavn","name":"新港","city":"哥本哈根","category":"景观","date":"2026-10-01","time":"","duration":"","order":1,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Nyhavn+Copenhagen","why":"10月1日行程单安排地点。","tags":["城市漫步"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"frederiks-church","name":"腓特烈教堂","city":"哥本哈根","category":"建筑","date":"2026-10-01","time":"","duration":"","order":2,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Frederik%27s+Church+Copenhagen","why":"10月1日行程单安排地点。","tags":["建筑"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"amalienborg","name":"阿美琳堡宫区域","city":"哥本哈根","category":"建筑","date":"2026-10-01","time":"","duration":"","order":3,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Amalienborg+Palace+Copenhagen","why":"10月1日行程单安排地点。","tags":["建筑","城市漫步"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"designmuseum","name":"丹麦艺术与设计博物馆","city":"哥本哈根","category":"博物馆","date":"2026-10-01","time":"","duration":"","order":4,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Designmuseum+Danmark","why":"10月1日行程单安排地点。","tags":["设计","博物馆"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"little-mermaid","name":"小美人鱼雕像","city":"哥本哈根","category":"景观","date":"2026-10-01","time":"","duration":"","order":5,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=The+Little+Mermaid+Copenhagen","why":"10月1日行程单安排地点。","tags":["城市漫步"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"round-tower","name":"圆塔","city":"哥本哈根","category":"建筑","date":"2026-10-02","time":"","duration":"","order":1,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=The+Round+Tower+Copenhagen","why":"10月2日行程单安排地点。","tags":["建筑"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"copenhagen-old-town","name":"哥本哈根老城区","city":"哥本哈根","category":"景观","date":"2026-10-02","time":"","duration":"","order":2,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Copenhagen+Old+Town","why":"10月2日行程单安排地点。","tags":["城市漫步"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"stroget","name":"Strøget 步行街","city":"哥本哈根","category":"购物","date":"2026-10-02","time":"","duration":"","order":3,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Stroget+Copenhagen","why":"10月2日行程单安排地点。","tags":["城市漫步","购物"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"hayhouse","name":"HAY House","city":"哥本哈根","category":"购物","date":"2026-10-02","time":"","duration":"","order":4,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=HAY+House+Copenhagen","why":"10月2日行程单安排地点。","tags":["设计","购物"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"glyptotek","name":"新嘉士伯美术馆","city":"哥本哈根","category":"博物馆","date":"2026-10-02","time":"","duration":"","order":5,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Ny+Carlsberg+Glyptotek+Copenhagen","why":"10月2日行程单安排地点。","tags":["博物馆"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"grundtvig","name":"管风琴教堂","city":"哥本哈根","category":"建筑","date":"2026-10-03","time":"","duration":"","order":1,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Grundtvig%27s+Church+Copenhagen","why":"10月3日行程单安排地点。","tags":["建筑"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"oslo-opera","name":"奥斯陆歌剧院","city":"奥斯陆","category":"建筑","date":"2026-10-04","time":"","duration":"","order":2,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Oslo+Opera+House","why":"10月4日行程单安排地点。","tags":["建筑"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"munch","name":"蒙克美术馆","city":"奥斯陆","category":"博物馆","date":"2026-10-04","time":"","duration":"","order":3,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=MUNCH+Oslo","why":"10月4日行程单安排地点。","tags":["博物馆"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"bjorvika","name":"Bjørvika 滨水区域","city":"奥斯陆","category":"景观","date":"2026-10-04","time":"","duration":"","order":4,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Bjorvika+Oslo","why":"10月4日行程单安排地点。","tags":["滨水","城市漫步"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"fuglen","name":"Fuglen 咖啡店","city":"奥斯陆","category":"咖啡","date":"2026-10-05","time":"","duration":"","order":1,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Fuglen+Oslo","why":"10月5日行程单安排地点。","tags":["咖啡"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"oslo-cathedral","name":"奥斯陆主教堂","city":"奥斯陆","category":"建筑","date":"2026-10-05","time":"","duration":"","order":2,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Oslo+Cathedral","why":"10月5日行程单安排地点。","tags":["建筑"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"karl-johans","name":"卡尔·约翰斯大街","city":"奥斯陆","category":"景观","date":"2026-10-05","time":"","duration":"","order":3,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Karl+Johans+gate+Oslo","why":"10月5日行程单安排地点。","tags":["城市漫步"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"royal-palace-oslo","name":"奥斯陆皇宫","city":"奥斯陆","category":"建筑","date":"2026-10-05","time":"","duration":"","order":4,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=The+Royal+Palace+Oslo","why":"10月5日行程单安排地点。","tags":["建筑"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"oslo-city-hall","name":"奥斯陆市政厅","city":"奥斯陆","category":"建筑","date":"2026-10-05","time":"","duration":"","order":5,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Oslo+City+Hall","why":"10月5日行程单安排地点。","tags":["建筑"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"nobel-peace","name":"诺贝尔和平中心","city":"奥斯陆","category":"博物馆","date":"2026-10-05","time":"","duration":"","order":6,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Nobel+Peace+Center+Oslo","why":"10月5日行程单安排地点。","tags":["博物馆"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"gamla-stan","name":"斯德哥尔摩老城（Gamla Stan）","city":"斯德哥尔摩","category":"景观","date":"2026-10-07","time":"","duration":"","order":1,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Gamla+Stan+Stockholm","why":"10月7日行程单安排地点。","tags":["城市漫步"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"royal-palace-stockholm","name":"斯德哥尔摩皇宫","city":"斯德哥尔摩","category":"建筑","date":"2026-10-07","time":"","duration":"","order":2,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=The+Royal+Palace+Stockholm","why":"10月7日行程单安排地点。","tags":["建筑"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"stortorget","name":"大广场（Stortorget）","city":"斯德哥尔摩","category":"景观","date":"2026-10-07","time":"","duration":"","order":3,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Stortorget+Stockholm","why":"10月7日行程单安排地点。","tags":["城市漫步"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"riddarholmen","name":"骑士岛教堂区域","city":"斯德哥尔摩","category":"建筑","date":"2026-10-07","time":"","duration":"","order":4,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Riddarholmen+Church+Stockholm","why":"10月7日行程单安排地点。","tags":["建筑"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"vasa","name":"瓦萨沉船博物馆","city":"斯德哥尔摩","category":"博物馆","date":"2026-10-08","time":"","duration":"","order":1,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Vasa+Museum+Stockholm","why":"10月8日行程单安排地点。","tags":["博物馆"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"abba","name":"ABBA 博物馆","city":"斯德哥尔摩","category":"博物馆","date":"2026-10-08","time":"","duration":"","order":2,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=ABBA+The+Museum+Stockholm","why":"10月8日行程单安排地点。","tags":["博物馆"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"djurgarden","name":"Djurgården 岛区域","city":"斯德哥尔摩","category":"景观","date":"2026-10-08","time":"","duration":"","order":3,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Djurgarden+Stockholm","why":"10月8日行程单安排地点。","tags":["城市漫步"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"stockholm-city-hall","name":"斯德哥尔摩市政厅","city":"斯德哥尔摩","category":"建筑","date":"2026-10-09","time":"","duration":"","order":1,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Stockholm+City+Hall","why":"10月9日行程单安排地点。","tags":["建筑"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"stockholm-center","name":"斯德哥尔摩市中心","city":"斯德哥尔摩","category":"景观","date":"2026-10-09","time":"","duration":"","order":2,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Central+Stockholm","why":"10月9日行程单安排地点。","tags":["城市漫步"],"notes":[],"checklist":[],"images":[],"blocks":[]}];
+
+const tripEvents=[{"id":"flight-out","type":"飞机","date":"2026-09-30","time":"13:25","order":1,"city":"北京 → 哥本哈根","name":"CA877 · 北京首都 T3 → 哥本哈根 T3","detail":"13:25 从北京首都机场 T3 起飞，17:05 抵达哥本哈根机场 T3。","subdetail":"抵达后乘公共交通 / 出租车前往酒店。"},{"id":"arrival-transfer","type":"接驳","date":"2026-09-30","time":"17:05","order":2,"city":"哥本哈根","name":"机场 → Hotel Hans","detail":"抵达哥本哈根后前往酒店，办理入住并休息。","subdetail":"公共交通 / 出租车。"},{"id":"cruise-out","type":"邮轮","date":"2026-10-03","time":"16:30","order":50,"city":"哥本哈根 → 奥斯陆","name":"M/S Nordic Crown · 哥本哈根 → 奥斯陆","detail":"16:30 从哥本哈根出发，次日 10:00 抵达奥斯陆。","subdetail":"过夜邮轮，直达。"},{"id":"cruise-arrive","type":"邮轮","date":"2026-10-04","time":"10:00","order":1,"city":"奥斯陆","name":"M/S Nordic Crown 抵达奥斯陆","detail":"10:00 抵达奥斯陆，之后开始市内游览。","subdetail":"奥斯陆市内乘公共交通并步行。"},{"id":"train-oslo-stockholm","type":"火车","date":"2026-10-06","time":"11:46","order":1,"city":"奥斯陆 → 斯德哥尔摩","name":"SJ 3000 · Train 638","detail":"奥斯陆 11:46 出发 → 斯德哥尔摩 17:16 抵达。","subdetail":"全程 5 小时 30 分，直达。"},{"id":"stockholm-hotel-transfer","type":"接驳","date":"2026-10-06","time":"17:16","order":2,"city":"斯德哥尔摩","name":"抵达后前往 Sheraton Stockholm Hotel","detail":"17:16 抵达斯德哥尔摩后前往酒店办理入住。","subdetail":""},{"id":"airport-transfer","type":"接驳","date":"2026-10-09","time":"","order":50,"city":"斯德哥尔摩","name":"市中心 → 阿兰达机场","detail":"游览斯德哥尔摩市政厅及市中心后，乘市内交通前往阿兰达机场。","subdetail":""},{"id":"flight-back","type":"飞机","date":"2026-10-09","time":"19:10","order":60,"city":"斯德哥尔摩 → 北京","name":"CA912 · 阿兰达 T5 → 北京首都 T3","detail":"19:10 从斯德哥尔摩阿兰达机场 T5 起飞，次日 09:40 抵达北京首都机场 T3。","subdetail":"航班过夜。"}];
+
+const tripAssets={"flights":[{"type":"飞机","title":"CA877 · 去程","date":"2026-09-30","route":"北京首都 T3 → 哥本哈根 T3","time":"13:25 → 17:05","detail":"北京出发，抵达哥本哈根后前往酒店。"},{"type":"飞机","title":"CA912 · 返程","date":"2026-10-09","route":"斯德哥尔摩阿兰达 T5 → 北京首都 T3","time":"19:10 → 09:40（次日）","detail":"航班过夜。"}],"cruise":[{"type":"邮轮","title":"M/S Nordic Crown","date":"2026-10-03","route":"哥本哈根 → 奥斯陆","time":"16:30 → 10:00（次日）","detail":"过夜邮轮，直达。"}],"trains":[{"type":"火车","title":"SJ 3000 · Train 638","date":"2026-10-06","route":"奥斯陆 → 斯德哥尔摩","time":"11:46 → 17:16","detail":"全程 5 小时 30 分，直达。"}],"hotels":[{"type":"酒店","title":"Hotel Hans","date":"2026-09-30","route":"哥本哈根 · 3 晚","time":"9 月 30 日 – 10 月 3 日","detail":"Åboulevard 29, Norrebro, Copenhagen, Denmark","maps":"https://www.google.com/maps/search/?api=1&query=Hotel+Hans+%C3%85boulevard+29+Copenhagen"},{"type":"酒店","title":"Hobo Oslo","date":"2026-10-04","route":"奥斯陆 · 2 晚","time":"10 月 4 日 – 10 月 6 日","detail":"Dronningens gate 23-25, 0154 Oslo, Norway","maps":"https://www.google.com/maps/search/?api=1&query=Hobo+Oslo+Dronningens+gate+23-25+Oslo"},{"type":"酒店","title":"Sheraton Stockholm Hotel","date":"2026-10-06","route":"斯德哥尔摩 · 3 晚","time":"10 月 6 日 – 10 月 9 日","detail":"Tegelbacken 6, Stockholm, Sweden","maps":"https://www.google.com/maps/search/?api=1&query=Sheraton+Stockholm+Hotel+Tegelbacken+6+Stockholm"}]};
+
+const transferAdvice={
+  'arrival-transfer':'建议机场乘地铁 M2 到 Forum，再步行约 5 分钟到 Hotel Hans；带行李时以实时导航为准。',
+  'cruise-out':'Hotel Hans → 哥本哈根邮轮码头：4 人带行李建议打车；预留路况与登船手续时间，目标 15:00–15:30 到码头。',
+  'cruise-arrive':'奥斯陆邮轮码头 → Hobo Oslo：带行李打车优先，轻装可考虑步行；按实际靠泊码头导航。',
+  'train-oslo-stockholm':'Hobo Oslo → Oslo S 建议步行（约 5 分钟）；携行李请留出余量，目标 10:45 前到车站。',
+  'stockholm-hotel-transfer':'Stockholm Central → Sheraton 建议步行（约 5 分钟）；携行李按实际出口导航。',
+  'airport-transfer':'约 15:30 从酒店出发，步行到 Stockholm Central 乘 Arlanda Express 前往 ARN；提前确认班次、票价及机场航站楼。'
+};
+const dayAdvice={
+  '2026-09-30':['交通票建议：考虑 City Pass Small 72h，拟覆盖机场进城及 10 月 3 日下午前的市区交通；购买前核对有效区域、起算时间与个人乘车需求。'],
+  '2026-10-01':['景点票建议：不买 Copenhagen Card，Designmuseum 单独购票；City Pass Small 仅用于交通，不含景点。'],
+  '2026-10-02':['景点票建议：Glyptotek 与 DAC 单独购票；继续使用已启用的 City Pass Small 交通票。'],
+  '2026-10-03':['交通重点：4 人携行李从 Hotel Hans 到邮轮码头优先打车；确认邮轮实际码头和登船截止时间。'],
+  '2026-10-04':['奥斯陆交通：不买 Oslo Pass；以步行和单次票为主，MUNCH 单独购票。下雨或当天频繁乘车时再比较 24h 交通票。'],
+  '2026-10-05':['奥斯陆市中心和 Grünerløkka 以步行 + 必要时单次票为主；天气差或多次乘车时再比较 24h 交通票，不专门购买 Oslo Pass。'],
+  '2026-10-06':['抵达斯德哥尔摩后：中央站步行到 Sheraton；市内交通单独购票，不将景点通票当交通票。'],
+  '2026-10-07':['景点票建议：可比较 Go City Essentials 3 景点版，拟用于 Royal Palace、Vasa、Skansen；Nobel Prize Museum 单独购票。购买前核对当期包含场馆、预约规则及有效期。'],
+  '2026-10-08':['景点票建议：若购买 Go City Essentials，可用于 Vasa + Skansen（须核对产品条款）；ABBA Museum 仍单独购买指定时段门票。'],
+  '2026-10-09':['返程交通：从 Sheraton 步行至中央站乘 Arlanda Express；Stockholm City Hall Guided Tour 单独预约/购票，不计入 Go City Essentials。']
+};
+
+const travelers=['洋仔','星','敏姐','Lynn'];
+const FX_KEY='travel_fx_rates_v1';
+const defaultFxRates={CNY:1,DKK:1.03,SEK:0.68,NOK:0.69};
+let fxRates=loadFxRates();
+
+const defaultExpenses=[];
+
+let places=load(STORAGE_KEY,defaultPlaces);
+let expenses=load(EXP_KEY,defaultExpenses);
+let activeDate='2026-09-30';
+
+function load(key,fallback){
+  try{
+    const v=JSON.parse(localStorage.getItem(key)||'null');
+    return Array.isArray(v)?v:fallback;
+  }catch(e){return fallback}
+}
+function loadFxRates(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(FX_KEY)||'null');
+    return saved?{...defaultFxRates,...saved}:{...defaultFxRates};
+  }catch(e){return {...defaultFxRates}}
+}
+function saveFxRates(){
+  fxRates={
+    CNY:1,
+    DKK:Number(document.getElementById('fxDKK')?.value||fxRates.DKK||defaultFxRates.DKK),
+    SEK:Number(document.getElementById('fxSEK')?.value||fxRates.SEK||defaultFxRates.SEK),
+    NOK:Number(document.getElementById('fxNOK')?.value||fxRates.NOK||defaultFxRates.NOK)
+  };
+  localStorage.setItem(FX_KEY,JSON.stringify(fxRates));
+  renderFxRates();renderExpenses();updateExpensePreview();showToast('汇率已更新');
+}
+function resetFxRates(){
+  fxRates={...defaultFxRates};
+  localStorage.setItem(FX_KEY,JSON.stringify(fxRates));
+  renderFxRates();renderExpenses();updateExpensePreview();showToast('已恢复默认汇率');
+}
+function renderFxRates(){
+  const map={DKK:'fxDKK',SEK:'fxSEK',NOK:'fxNOK'};
+  Object.entries(map).forEach(([cur,id])=>{const el=document.getElementById(id);if(el)el.value=Number(fxRates[cur]).toFixed(4)});
+}
+function toCNY(amount,currency){
+  return Number(amount||0)*Number(fxRates[currency]||1);
+}
+function currencySymbol(cur){
+  return {CNY:'¥',DKK:'kr',SEK:'kr',NOK:'kr'}[cur]||cur;
+}
+
+function persist(){localStorage.setItem(STORAGE_KEY,JSON.stringify(places))}
+function persistExpenses(){localStorage.setItem(EXP_KEY,JSON.stringify(expenses))}
+
+document.querySelectorAll('.nav button').forEach(btn=>btn.addEventListener('click',()=>switchView(btn.dataset.view)));
+
+function switchView(view){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach(v=>v.classList.remove('active'));
+  document.getElementById(view).classList.add('active');
+  document.querySelector(`.nav button[data-view="${view}"]`).classList.add('active');
+  if(view==='places')renderPlaces();
+  if(view==='itinerary')renderItinerary();
+  if(view==='logistics')renderLogistics();
+  if(view==='expenses'){renderFxRates();renderExpenses();}
+}
+
+function renderAll(){renderOverview();renderItinerary();renderPlaces();renderLogistics();renderFxRates();renderExpenses()}
+
+function renderOverview(){
+  document.getElementById('placeCount').textContent=places.length;
+  document.getElementById('noteCount').textContent=places.reduce((s,p)=>s+(p.blocks?.length||0)+(p.notes?.length||0),0);
+  const key=[tripAssets.flights[0],tripAssets.cruise[0],tripAssets.trains[0],tripAssets.flights[1]];
+  const el=document.getElementById('overviewLogistics');
+  if(el)el.innerHTML=key.map(assetCard).join('');
+}
+
+function allDates(){
+  const dates=[...new Set([...places.map(p=>p.date),...tripEvents.map(e=>e.date)].filter(Boolean))].sort();
+  return dates.length?dates:['2026-09-30'];
+}
+function dateCN(date){
+  if(!date)return '未安排日期';
+  const d=new Date(date+'T00:00:00');
+  return `${d.getMonth()+1} 月 ${d.getDate()} 日`;
+}
+function weekdayCN(date){
+  const d=new Date(date+'T00:00:00');
+  return ['周日','周一','周二','周三','周四','周五','周六'][d.getDay()];
+}
+function renderItinerary(){
+  const dates=allDates();
+  if(!dates.includes(activeDate))activeDate=dates[0];
+  document.getElementById('dateTabs').innerHTML=dates.map(d=>`<button class="date-tab ${d===activeDate?'active':''}" onclick="setActiveDate('${d}')">${dateCN(d)}</button>`).join('');
+
+  const dayPlaces=places.filter(p=>p.date===activeDate).map(p=>({...p,kind:'place'}));
+  const dayEvents=tripEvents.filter(e=>e.date===activeDate).map(e=>({...e,kind:'event'}));
+  const items=[...dayPlaces,...dayEvents].sort((a,b)=>(a.order??99)-(b.order??99)||String(a.time||'').localeCompare(String(b.time||'')));
+
+  const city=(dayPlaces[0]?.city||dayEvents[0]?.city||'');
+  document.getElementById('dayTitle').textContent=`${dateCN(activeDate)} · ${weekdayCN(activeDate)}`;
+  document.getElementById('daySub').textContent=items.length?`${city} · ${dayPlaces.length} 个游览地点 · ${dayEvents.length} 个交通节点`:'这一天还没有安排';
+  const advice=document.getElementById('dayAdvice');
+  advice.hidden=!dayAdvice[activeDate];
+  advice.innerHTML=dayAdvice[activeDate]?`<h3>当天交通与票卡建议</h3>${dayAdvice[activeDate].map(text=>`<p>${escapeHtml(text)}</p>`).join('')}`:'';
+
+  document.getElementById('timeline').innerHTML=items.length?items.map((item,i)=>{
+    if(item.kind==='event'){
+      return `<div class="time-row">
+        <div class="time">${item.time||'—'}</div>
+        <div class="event special">
+          <span class="event-kind">${escapeHtml(item.type)}</span>
+          <h3>${escapeHtml(item.name)}</h3>
+          <p>${escapeHtml(item.detail||'')}${item.subdetail?`<br>${escapeHtml(item.subdetail)}`:''}</p>
+          ${transferAdvice[item.id]?`<p class="event-note"><b>交通建议：</b>${escapeHtml(transferAdvice[item.id])}</p>`:''}
+        </div>
+      </div>`;
+    }
+    return `<div class="time-row">
+      <div class="time">${item.time||'顺序 '+(item.order??i+1)}</div>
+      <div class="event">
+        <span class="event-kind">${escapeHtml(item.category)}</span>
+        <h3>${escapeHtml(item.name)}</h3>
+          <p>${escapeHtml(item.why||'')}</p>
+          ${(item.booking||item.planNote)?`<div class="event-tags">${item.booking?`<span class="event-tag">${escapeHtml(item.booking)}</span>`:''}</div>`:''}
+          ${item.planNote?`<p class="event-note"><b>行程备注：</b>${escapeHtml(item.planNote)}</p>`:''}
+          <div class="event-actions">
+          <button class="micro" onclick="openPlace('${item.id}')">查看地点</button>
+          ${item.maps?`<a class="micro" style="text-decoration:none" href="${escapeAttr(item.maps)}" target="_blank">Google Maps ↗</a>`:''}
+          <button class="micro" onclick="movePlace('${item.id}',-1)">上移</button>
+          <button class="micro" onclick="movePlace('${item.id}',1)">下移</button>
+        </div>
+      </div>
+    </div>`;
+  }).join(''):'<div class="empty">还没有安排。</div>';
+
+  const stay=getNightStay(activeDate);
+  if(stay){
+    document.getElementById('timeline').insertAdjacentHTML('beforeend',
+      `<div class="stay-bar"><b>当晚住宿：</b>${escapeHtml(stay.title)} · ${escapeHtml(stay.detail||'')}</div>`);
+  }
+}
+function setActiveDate(d){activeDate=d;renderItinerary()}
+function movePlace(id,dir){
+  const items=places.filter(p=>p.date===activeDate).sort((a,b)=>(a.order??99)-(b.order??99));
+  const index=items.findIndex(p=>p.id===id), target=index+dir;
+  if(index<0||target<0||target>=items.length)return;
+  items.forEach((p,i)=>p.order=i+1);
+  const temp=items[index].order;items[index].order=items[target].order;items[target].order=temp;
+  persist();renderItinerary();showToast('景点顺序已调整');
+}
+
+
+function assetCard(a){
+  const map=a.maps?`<div style="margin-top:10px"><a class="micro" style="text-decoration:none" href="${escapeAttr(a.maps)}" target="_blank">Google Maps ↗</a></div>`:'';
+  return `<div class="log-card">
+    <div class="log-top"><span class="log-type">${escapeHtml(a.type)}</span><span class="meta">${dateCN(a.date)}</span></div>
+    <h3>${escapeHtml(a.title)}</h3>
+    <div class="log-route">${escapeHtml(a.route)}</div>
+    <div class="log-time">${escapeHtml(a.time||'')}</div>
+    <div class="log-detail">${escapeHtml(a.detail||'')}</div>${map}
+  </div>`;
+}
+function getNightStay(date){
+  if(date>='2026-09-30'&&date<='2026-10-02')return tripAssets.hotels[0];
+  if(date==='2026-10-03')return {title:'M/S Nordic Crown',detail:'过夜邮轮 · 哥本哈根 → 奥斯陆'};
+  if(date>='2026-10-04'&&date<='2026-10-05')return tripAssets.hotels[1];
+  if(date>='2026-10-06'&&date<='2026-10-08')return tripAssets.hotels[2];
+  if(date==='2026-10-09')return {title:'CA912',detail:'航班过夜 · 次日抵达北京'};
+  return null;
+}
+function renderLogistics(){
+  const el=document.getElementById('logisticsContent');if(!el)return;
+  el.innerHTML=`
+    <div class="card section" style="margin-top:0"><div class="section-head"><h2>航班</h2><small>2 段</small></div><div class="logistics-grid">${tripAssets.flights.map(assetCard).join('')}</div></div>
+    <div class="card section"><div class="section-head"><h2>邮轮与跨城火车</h2><small>2 段</small></div><div class="logistics-grid">${[...tripAssets.cruise,...tripAssets.trains].map(assetCard).join('')}</div></div>
+    <div class="card section"><div class="section-head"><h2>酒店</h2><small>8 个酒店住宿夜晚</small></div><div class="logistics-grid">${tripAssets.hotels.map(assetCard).join('')}</div></div>
+  `;
+}
+
+function renderPlaces(){
+  const q=(document.getElementById('searchInput')?.value||'').toLowerCase();
+  const category=document.getElementById('categoryFilter')?.value||'all';
+  const city=document.getElementById('cityFilter')?.value||'all';
+  const plan=document.getElementById('planFilter')?.value||'all';
+  const filtered=places.filter(p=>{
+    const hay=[p.name,p.why,p.city,p.category,...(p.tags||[]),...(p.notes||[])].join(' ').toLowerCase();
+    return (category==='all'||p.category===category)&&(city==='all'||p.city===city)&&(plan==='all'||(plan==='planned'&&!p.date)||(plan==='scheduled'&&p.date))&&hay.includes(q);
+  });
+  const el=document.getElementById('placesGrid');
+  el.innerHTML=filtered.length?filtered.map(p=>`
+    <article class="card place">
+      <div class="cover" style="background-image:url('${escapeAttr(p.images?.[0]||'')}')"></div>
+      <div class="place-body">
+        <div class="meta">${escapeHtml(p.category)} · ${escapeHtml(p.city)} · ${p.date?dateCN(p.date):'待规划'}</div>
+        <h3>${escapeHtml(p.name)}</h3>
+        <p>${escapeHtml(p.why||'暂无说明')}</p>
+        <div class="meta">${p.rating?`评分 ${escapeHtml(p.rating)} · ${Number(p.reviews||0).toLocaleString('zh-CN')} 条评价`:''}${p.price?` · ${escapeHtml(p.price)}`:''}${p.sourceCategory?` · ${escapeHtml(p.sourceCategory)}`:''}</div>
+        ${p.planNote?`<div class="meta">${escapeHtml(p.planNote)}</div>`:''}
+        <div class="tag-row">${(p.tags||[]).slice(0,4).map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join('')}${p.booking?`<span class="tag">${escapeHtml(p.booking)}</span>`:''}</div>
+        <div class="place-foot" style="margin-top:13px"><button class="link-btn" onclick="openPlace('${p.id}')">查看详情 →</button><span class="note-count">${(p.blocks?.length||0)+(p.notes?.length||0)} 条笔记</span></div>
+      </div>
+    </article>`).join(''):'<div class="card empty">没有匹配的地点。可以换个关键词或直接添加新地点。</div>';
+}
+
+function openPlace(id){
+  const p=places.find(x=>x.id===id); if(!p)return;
+  const cover=document.getElementById('drawerCover');
+  cover.style.backgroundImage=p.images?.[0]?`url('${escapeAttr(p.images[0])}')`:'none';
+  const blocks=(p.blocks||[]).map(b=>{
+    if(b.type==='image')return `<div class="note-block">${b.src?`<img src="${escapeAttr(b.src)}" alt="">`:''}${b.text?`<div class="note-caption">${escapeHtml(b.text)}</div>`:''}</div>`;
+    return `<div class="note-block"><div class="note-text">${escapeHtml(b.text||'')}</div></div>`;
+  }).join('');
+  document.getElementById('drawerContent').innerHTML=`
+    <div class="meta">${escapeHtml(p.category)} · ${escapeHtml(p.city)}</div>
+    <h2>${escapeHtml(p.name)}</h2>
+    <div class="subline">${escapeHtml(p.address||'暂无地址')}</div>
+    <div class="subline">${p.rating?`评分 ${escapeHtml(p.rating)} · ${Number(p.reviews||0).toLocaleString('zh-CN')} 条评价`:''}${p.price?` · ${escapeHtml(p.price)}`:''}${p.sourceCategory?` · ${escapeHtml(p.sourceCategory)}`:''}</div>
+    <div class="tag-row">${(p.tags||[]).map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join('')}</div>
+    ${p.maps?`<a class="map-link" href="${escapeAttr(p.maps)}" target="_blank">在 Google Maps 中打开 ↗</a>`:''}
+    ${p.planNote?`<div class="detail-box" style="margin:14px 0"><label>规划备注</label><b>${escapeHtml(p.planNote)}</b></div>`:''}
+    <div class="detail-grid">
+      <div class="detail-box"><label>安排日期</label><b>${dateCN(p.date)} · ${escapeHtml(p.time||'未设时间')}</b></div>
+      <div class="detail-box"><label>建议停留</label><b>${escapeHtml(p.duration||'未设置')}</b></div>
+      ${p.booking?`<div class="detail-box"><label>预约状态</label><b>${escapeHtml(p.booking)}</b></div>`:''}
+    </div>
+    <div class="content-block"><h3>为什么去</h3><p>${escapeHtml(p.why||'暂无说明')}</p></div>
+    <div class="content-block"><h3>快捷备注</h3><ul>${(p.notes||[]).map(n=>`<li>${escapeHtml(n)}</li>`).join('')||'<li>暂无备注</li>'}</ul></div>
+    <div class="content-block">
+      <div class="section-head" style="margin-bottom:10px"><h3 style="margin:0">图文笔记</h3><button class="secondary" onclick="openNoteModal('${p.id}')">＋ 添加笔记</button></div>
+      <div class="note-blocks">${blocks||'<div class="empty" style="padding:24px">还没有图文笔记。可以添加攻略截图、参考图和现场提醒。</div>'}</div>
+    </div>
+    ${(p.images||[]).length?`<div class="content-block"><h3>相册</h3><div class="gallery">${p.images.map(src=>`<img src="${escapeAttr(src)}" alt="">`).join('')}</div></div>`:''}
+    <div class="content-block"><h3>现场 Checklist</h3><div class="checklist">${(p.checklist||[]).map((x,i)=>`<label><input type="checkbox" ${localStorage.getItem('check_'+p.id+'_'+i)==='1'?'checked':''} onchange="toggleCheck('${p.id}',${i},this.checked)"><span>${escapeHtml(x)}</span></label>`).join('')||'<p>暂无清单</p>'}</div></div>
+    <div class="drawer-actions">
+      <button class="primary" onclick="editPlace('${p.id}')">编辑地点</button>
+      <button class="secondary" onclick="duplicatePlace('${p.id}')">复制地点</button>
+      <button class="danger" onclick="deletePlace('${p.id}')">删除</button>
+    </div>`;
+  document.getElementById('drawer').classList.add('open');
+}
+function closeDrawer(){document.getElementById('drawer').classList.remove('open')}
+function toggleCheck(id,i,checked){localStorage.setItem('check_'+id+'_'+i,checked?'1':'0')}
+
+function openPlaceModal(){
+  clearPlaceForm();
+  document.getElementById('placeModalTitle').textContent='添加地点';
+  document.getElementById('placeModal').classList.add('open');
+}
+function closePlaceModal(){document.getElementById('placeModal').classList.remove('open')}
+function editPlace(id){
+  const p=places.find(x=>x.id===id);if(!p)return;
+  closeDrawer();
+  document.getElementById('placeModalTitle').textContent='编辑地点';
+  document.getElementById('editingId').value=p.id;
+  document.getElementById('fName').value=p.name||'';
+  document.getElementById('fCity').value=p.city||'哥本哈根';
+  document.getElementById('fCategory').value=p.category||'其他';
+  document.getElementById('fDuration').value=p.duration||'';
+  document.getElementById('fDate').value=p.date||'';
+  document.getElementById('fTime').value=p.time||'';
+  document.getElementById('fMaps').value=p.maps||'';
+  document.getElementById('fAddress').value=p.address||'';
+  document.getElementById('fWhy').value=p.why||'';
+  document.getElementById('fTags').value=(p.tags||[]).join(', ');
+  document.getElementById('fNotes').value=(p.notes||[]).join('\n');
+  document.getElementById('fImages').value=(p.images||[]).join('\n');
+  document.getElementById('fChecklist').value=(p.checklist||[]).join('\n');
+  document.getElementById('placeModal').classList.add('open');
+}
+function savePlace(){
+  const name=document.getElementById('fName').value.trim();
+  if(!name){showToast('请先填写地点名称');return}
+  const id=document.getElementById('editingId').value;
+  const existing=id?places.find(p=>p.id===id):null;
+  const date=document.getElementById('fDate').value;
+  const p={
+    id:id||'p_'+Date.now(),name,
+    city:document.getElementById('fCity').value,
+    category:document.getElementById('fCategory').value,
+    duration:document.getElementById('fDuration').value.trim(),
+    date,time:document.getElementById('fTime').value,
+    maps:document.getElementById('fMaps').value.trim()||'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(name),
+    address:document.getElementById('fAddress').value.trim(),
+    why:document.getElementById('fWhy').value.trim(),
+    tags:document.getElementById('fTags').value.split(/[,，]/).map(x=>x.trim()).filter(Boolean),
+    notes:lines('fNotes'),images:lines('fImages'),checklist:lines('fChecklist'),
+    blocks:existing?.blocks||[],
+    order:existing?.order??(places.filter(x=>x.date===date).length+1)
+  };
+  if(existing)places=places.map(x=>x.id===id?p:x);else places.push(p);
+  persist();closePlaceModal();renderAll();activeDate=date||activeDate;showToast(existing?'地点已更新':'地点已添加');
+}
+function clearPlaceForm(){
+  document.getElementById('editingId').value='';
+  ['fName','fDuration','fMaps','fAddress','fWhy','fTags','fNotes','fImages','fChecklist'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('fCity').value='哥本哈根';document.getElementById('fCategory').value='博物馆';
+  document.getElementById('fDate').value='';document.getElementById('fTime').value='';
+}
+function lines(id){return document.getElementById(id).value.split('\n').map(x=>x.trim()).filter(Boolean)}
+function duplicatePlace(id){
+  const p=places.find(x=>x.id===id);if(!p)return;
+  const clone=JSON.parse(JSON.stringify(p));clone.id='p_'+Date.now();clone.name=p.name+'（副本）';clone.order=(p.order??99)+0.1;
+  places.push(clone);persist();closeDrawer();renderAll();showToast('已复制地点');
+}
+function deletePlace(id){
+  const p=places.find(x=>x.id===id);if(!p)return;
+  if(!confirm(`确定删除“${p.name}”吗？该地点的图文笔记也会一起删除。`))return;
+  places=places.filter(x=>x.id!==id);persist();closeDrawer();renderAll();showToast('地点已删除');
+}
+
+function openNoteModal(placeId){
+  document.getElementById('notePlaceId').value=placeId;
+  document.getElementById('noteType').value='text';
+  document.getElementById('noteImage').value='';document.getElementById('noteText').value='';
+  toggleNoteFields();document.getElementById('noteModal').classList.add('open');
+}
+function closeNoteModal(){document.getElementById('noteModal').classList.remove('open')}
+function toggleNoteFields(){
+  const isImg=document.getElementById('noteType').value==='image';
+  document.getElementById('noteImageField').style.display=isImg?'block':'none';
+  document.getElementById('noteTextLabel').textContent=isImg?'图片说明':'笔记内容';
+}
+function saveNoteBlock(){
+  const id=document.getElementById('notePlaceId').value;
+  const p=places.find(x=>x.id===id);if(!p)return;
+  const type=document.getElementById('noteType').value;
+  const text=document.getElementById('noteText').value.trim();
+  const src=document.getElementById('noteImage').value.trim();
+  if(type==='text'&&!text){showToast('请输入笔记内容');return}
+  if(type==='image'&&!src){showToast('请输入图片 URL');return}
+  p.blocks=p.blocks||[];p.blocks.push(type==='image'?{type:'image',src,text}:{type:'text',text});
+  persist();closeNoteModal();openPlace(id);renderOverview();renderPlaces();showToast('图文笔记已添加');
+}
+
+function openExpenseModal(){
+  document.getElementById('expenseModal').classList.add('open');
+  document.querySelectorAll('.participant').forEach(x=>x.checked=true);
+  updateExpensePreview();
+}
+function closeExpenseModal(){document.getElementById('expenseModal').classList.remove('open')}
+function updateExpensePreview(){
+  const cur=document.getElementById('eCurrency')?.value||'CNY';
+  const amount=Number(document.getElementById('eAmount')?.value||0);
+  const cny=toCNY(amount,cur);
+  const el=document.getElementById('expensePreview');
+  if(el)el.textContent=`折算人民币：¥${cny.toFixed(2)}（1 ${cur} = ¥${Number(fxRates[cur]||1).toFixed(4)}）`;
+}
+function saveExpense(){
+  const item=document.getElementById('eItem').value.trim();
+  const amount=Number(document.getElementById('eAmount').value||0);
+  const currency=document.getElementById('eCurrency').value;
+  const paidBy=document.getElementById('ePaidBy').value;
+  const participants=[...document.querySelectorAll('.participant:checked')].map(x=>x.value);
+  if(!item||amount<=0){showToast('请填写项目和有效金额');return}
+  if(!participants.length){showToast('至少选择 1 位参与人');return}
+  expenses.push({
+    id:'e_'+Date.now(),
+    date:document.getElementById('eDate').value,
+    category:document.getElementById('eCategory').value,
+    item,paidBy,amount,currency,participants
+  });
+  persistExpenses();closeExpenseModal();
+  document.getElementById('eItem').value='';document.getElementById('eAmount').value='';
+  renderExpenses();showToast('费用已记录');
+}
+function deleteExpense(id){
+  if(!confirm('确定删除这条费用记录吗？'))return;
+  expenses=expenses.filter(x=>x.id!==id);persistExpenses();renderExpenses();showToast('费用已删除');
+}
+function renderExpenses(){
+  const normalized=expenses.map(e=>{
+    const currency=e.currency||'CNY';
+    const participants=(e.participants&&e.participants.length)?e.participants:[...travelers];
+    const cny=toCNY(e.amount,currency);
+    return {...e,currency,participants,cny};
+  });
+  const total=normalized.reduce((s,x)=>s+x.cny,0);
+  const totalEl=document.getElementById('totalExpense');if(totalEl)totalEl.textContent='¥'+total.toFixed(2);
+  const pp=document.getElementById('perPerson');if(pp)pp.textContent='¥'+(total/4).toFixed(2);
+  const count=document.getElementById('expenseCount');if(count)count.textContent=normalized.length;
+
+  const byCat={};normalized.forEach(e=>byCat[e.category]=(byCat[e.category]||0)+e.cny);
+  const top=Object.entries(byCat).sort((a,b)=>b[1]-a[1])[0];
+  const topEl=document.getElementById('topCategory');if(topEl)topEl.textContent=top?top[0]:'—';
+
+  const body=document.getElementById('expenseBody');
+  if(body)body.innerHTML=normalized.length?normalized.map(e=>`<tr>
+    <td>${dateCN(e.date)}</td>
+    <td>${escapeHtml(e.category)}</td>
+    <td>${escapeHtml(e.item)}</td>
+    <td>${escapeHtml(e.paidBy)}</td>
+    <td>${escapeHtml(e.participants.join('、'))}</td>
+    <td><span class="currency-badge">${e.currency}</span> ${currencySymbol(e.currency)}${Number(e.amount).toFixed(2)}</td>
+    <td>¥${e.cny.toFixed(2)}<div class="rmb-note">汇率 ${Number(fxRates[e.currency]||1).toFixed(4)}</div></td>
+    <td><button class="table-action" onclick="deleteExpense('${e.id}')">删除</button></td>
+  </tr>`).join(''):'<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:35px">还没有费用记录</td></tr>';
+
+  renderSettlement(normalized);
+}
+function renderSettlement(normalized){
+  const balances=Object.fromEntries(travelers.map(n=>[n,0]));
+  normalized.forEach(e=>{
+    balances[e.paidBy]=(balances[e.paidBy]||0)+e.cny;
+    const share=e.cny/e.participants.length;
+    e.participants.forEach(n=>balances[n]=(balances[n]||0)-share);
+  });
+
+  const summary=document.getElementById('balanceSummary');
+  if(summary){
+    summary.innerHTML=travelers.map(n=>`<div class="card stat" style="box-shadow:none"><span>${escapeHtml(n)}</span><b style="font-size:22px">${balances[n]>=0?'+':''}¥${balances[n].toFixed(2)}</b><span>${balances[n]>=0?'应收':'应付'}</span></div>`).join('');
+  }
+
+  const creditors=travelers.filter(n=>balances[n]>0.005).map(n=>({name:n,amount:balances[n]})).sort((a,b)=>b.amount-a.amount);
+  const debtors=travelers.filter(n=>balances[n]<-0.005).map(n=>({name:n,amount:-balances[n]})).sort((a,b)=>b.amount-a.amount);
+  const tx=[];
+  let i=0,j=0;
+  while(i<debtors.length&&j<creditors.length){
+    const amount=Math.min(debtors[i].amount,creditors[j].amount);
+    if(amount>0.005)tx.push({from:debtors[i].name,to:creditors[j].name,amount});
+    debtors[i].amount-=amount;creditors[j].amount-=amount;
+    if(debtors[i].amount<0.005)i++;
+    if(creditors[j].amount<0.005)j++;
+  }
+
+  const list=document.getElementById('settlementList');
+  if(list){
+    list.innerHTML=tx.length?tx.map(t=>`<div class="settlement-row"><div><b>${escapeHtml(t.from)} → ${escapeHtml(t.to)}</b><br><span>最终人民币转账</span></div><strong>¥${t.amount.toFixed(2)}</strong></div>`).join(''):'<div class="empty" style="padding:26px">'+(normalized.length?'当前账目已平衡，无需互相转账':'录入费用后，这里会自动生成最简人民币转账方案。')+'</div>';
+  }
+}
+function exportData(){
+  const data={trip:'北欧 2026',exportedAt:new Date().toISOString(),travelers,fxRates,places,tripEvents,tripAssets,expenses};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='北欧旅行计划-data.json';a.click();URL.revokeObjectURL(url);
+  showToast('旅行数据已导出');
+}
+function resetDemo(){
+  if(!confirm('这会覆盖当前浏览器中的地点和费用数据，恢复为示例内容。确定继续吗？'))return;
+  places=applyFinalPlan(mergeImportedPlaces(JSON.parse(JSON.stringify(defaultPlaces))));expenses=JSON.parse(JSON.stringify(defaultExpenses));fxRates={...defaultFxRates};localStorage.setItem(FX_KEY,JSON.stringify(fxRates));localStorage.setItem(FINAL_PLAN_VERSION,FINAL_PLAN_VERSION);
+  persist();persistExpenses();activeDate='2026-09-30';renderAll();showToast('已恢复示例数据');
+}
+function showToast(msg){
+  const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');
+  clearTimeout(window._toastTimer);window._toastTimer=setTimeout(()=>el.classList.remove('show'),1800);
+}
+function escapeHtml(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function escapeAttr(s=''){return escapeHtml(s)}
+
+function mapSearch(name,city){return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(name+' '+city)}
+const intakeRows=[
+  ['intake-ambra','Ambra','斯德哥尔摩','餐厅',4.1,375,'kr 300–900','意大利风味','Google Maps 收藏；截图显示意大利风味餐厅。','感兴趣,待规划,截图收藏,意大利风味'],
+  ['intake-skultuna-1','Skultuna Store（分店 1）','斯德哥尔摩','购物',4.8,26,'','商店','Google Maps 收藏；与另一家同名门店分开保留。','感兴趣,待规划,截图收藏,设计'],
+  ['intake-skultuna-2','Skultuna Store（分店 2）','斯德哥尔摩','购物',5.0,12,'','珠宝行','Google Maps 收藏；与另一家同名门店分开保留。','感兴趣,待规划,截图收藏,珠宝'],
+  ['intake-skansen','斯堪森（Skansen）','斯德哥尔摩','景观',4.5,36008,'','露天博物馆','Google Maps 收藏；斯德哥尔摩露天博物馆与历史街区。','感兴趣,待规划,截图收藏,露天博物馆'],
+  ['intake-hantverket','Restaurang Hantverket','斯德哥尔摩','餐厅',4.6,2410,'kr 400–1,000','瑞典风味','Google Maps 收藏；瑞典风味餐厅。','感兴趣,待规划,截图收藏,瑞典风味'],
+  ['intake-lennart-bror','Lennart & Bror Fisk','斯德哥尔摩','餐厅',4.3,425,'kr 300–700','海鲜','Google Maps 收藏；海鲜餐厅。','感兴趣,待规划,截图收藏,海鲜'],
+  ['intake-posterland','Posterland','哥本哈根','购物',4.2,797,'','海报店','Google Maps 收藏；海报与设计类商店。','感兴趣,待规划,截图收藏,海报'],
+  ['intake-dac','丹麦建筑中心（Danish Architecture Center）','哥本哈根','博物馆',4.3,4795,'','博物馆','Google Maps 收藏；建筑与城市设计展览空间。','感兴趣,待规划,截图收藏,建筑'],
+  ['intake-akershus','阿克斯胡斯城堡（Akershus Fortress）','奥斯陆','建筑',4.5,18290,'','堡垒','Google Maps 收藏；奥斯陆港口旁的历史城堡。','感兴趣,待规划,截图收藏,历史建筑'],
+  ['intake-montana','Montana','哥本哈根','购物',4.3,43,'','家具城','Google Maps 收藏；丹麦家具品牌与展厅。','感兴趣,待规划,截图收藏,家具'],
+  ['intake-frama','Frama','哥本哈根','购物',4.7,111,'','家具城','Google Maps 收藏；家具、香氛与生活方式设计。','感兴趣,待规划,截图收藏,家具,设计'],
+  ['intake-design-market','Design Market','哥本哈根','购物',4.2,28,'','家具城','Google Maps 收藏；家具与设计选物。','感兴趣,待规划,截图收藏,家具'],
+  ['intake-studio-arhoj','Studio Arhoj','哥本哈根','购物',4.8,567,'','家居用品商店','Google Maps 收藏；陶瓷和家居用品。','感兴趣,待规划,截图收藏,陶瓷'],
+  ['intake-ferm-living','Ferm Living','哥本哈根','购物',4.1,101,'','商店','Google Maps 收藏；北欧家居与生活方式品牌。','感兴趣,待规划,截图收藏,家居'],
+  ['intake-finn-juhl','House of Finn Juhl','哥本哈根','购物',4.8,24,'','展厅','Google Maps 收藏；Finn Juhl 家具展厅。','感兴趣,待规划,截图收藏,设计,家具'],
+  ['intake-audo','Audo House','哥本哈根','购物',4.1,156,'','精品店','Google Maps 收藏；设计家具与生活方式空间。','感兴趣,待规划,截图收藏,设计'],
+  ['intake-hooked','Hooked','哥本哈根','餐厅',4.5,510,'kr 200–300','海鲜','Google Maps 收藏；海鲜餐厅。','感兴趣,待规划,截图收藏,海鲜'],
+  ['intake-netto','Netto','哥本哈根','购物',3.8,454,'','杂货店','Google Maps 收藏；当地日常杂货店。','感兴趣,待规划,截图收藏,杂货'],
+  ['intake-torvehallerne','TorvehallerneKBH','哥本哈根','购物',4.5,16769,'','生鲜市场','Google Maps 收藏；哥本哈根室内生鲜与美食市场。','感兴趣,待规划,截图收藏,市场,生鲜'],
+  ['intake-balue','Balue','哥本哈根','咖啡',4.7,193,'kr 100–200','咖啡馆','Google Maps 收藏；咖啡馆。','感兴趣,待规划,截图收藏,咖啡'],
+  ['intake-den-glade-gris','Den Glade Gris','奥斯陆','餐厅',4.6,5475,'kr 300–700','传统挪威餐厅','Google Maps 收藏；传统挪威餐厅。','感兴趣,待规划,截图收藏,挪威风味'],
+  ['intake-tavernahn',"Taverna'n",'奥斯陆','餐厅',4.2,1137,'kr 200–500','餐馆','Google Maps 收藏；奥斯陆餐馆。','感兴趣,待规划,截图收藏,餐厅'],
+  ['intake-mamma-pizza','Mamma Pizza','奥斯陆','餐厅',4.6,6817,'kr 200–400','披萨','Google Maps 收藏；披萨餐厅。','感兴趣,待规划,截图收藏,披萨'],
+  ['intake-grunerlokka','葛鲁尼洛卡（Grünerløkka）','奥斯陆','景观','','','','街区','Google Maps 收藏；奥斯陆街区，适合结合咖啡、餐厅和小店安排。','感兴趣,待规划,截图收藏,街区'],
+  ['intake-mjol','Mjøl Bakeri Homansbyen','奥斯陆','咖啡',4.8,57,'kr 1–100','糕点店','Google Maps 收藏；烘焙与糕点店。','感兴趣,待规划,截图收藏,烘焙'],
+  ['intake-elan','élan','奥斯陆','咖啡',4.4,53,'kr 1–100','咖啡店','Google Maps 收藏；咖啡店。','感兴趣,待规划,截图收藏,咖啡'],
+  ['intake-hart-1','Hart（分店 1）','哥本哈根','咖啡',4.5,743,'kr 100–200','糕点店','Google Maps 收藏；与另一家同名门店分开保留。','感兴趣,待规划,截图收藏,烘焙'],
+  ['intake-hart-2','Hart（分店 2）','哥本哈根','咖啡',4.5,212,'kr 1–100','糕点店','Google Maps 收藏；与另一家同名门店分开保留。','感兴趣,待规划,截图收藏,烘焙'],
+  ['intake-prolog','Prolog Coffee Bar Papirøen','哥本哈根','咖啡',4.7,174,'kr 1–100','咖啡店','Google Maps 收藏；Papirøen 咖啡店。','感兴趣,待规划,截图收藏,咖啡'],
+  ['intake-juno','Juno the bakery','哥本哈根','咖啡',4.7,4434,'kr 100–200','糕点店','Google Maps 收藏；烘焙店。','感兴趣,待规划,截图收藏,烘焙'],
+  ['intake-mad-kaffe','Mad & Kaffe','哥本哈根','咖啡',4.5,3164,'kr 200–300','咖啡店','Google Maps 收藏；咖啡与早午餐。','感兴趣,待规划,截图收藏,早午餐'],
+  ['intake-amator','Amator','哥本哈根','餐厅',4.8,243,'kr 200–300','早餐','Google Maps 收藏；早餐店。','感兴趣,待规划,截图收藏,早餐'],
+  ['intake-aben','ÅBEN Kødbyen','哥本哈根','其他',4.5,586,'kr 100–200','酒吧','Google Maps 收藏；Kødbyen 酒吧。','感兴趣,待规划,截图收藏,酒吧'],
+  ['intake-rains','RAINS','哥本哈根','购物',4.5,8,'','服装店','Google Maps 收藏；北欧服装品牌门店。','感兴趣,待规划,截图收藏,服装'],
+  ['intake-medieval','中世纪博物馆（Medeltidsmuseet）','斯德哥尔摩','博物馆',4.5,4545,'','博物馆','Google Maps 收藏；截图标注“暂时停业”，出发前需再次确认开放状态。','感兴趣,待规划,截图收藏,暂时停业'],
+  ['intake-nobel','诺贝尔博物馆（Nobel Prize Museum）','斯德哥尔摩','博物馆',4.1,9320,'','博物馆','Google Maps 收藏；诺贝尔奖主题博物馆。','感兴趣,待规划,截图收藏,博物馆'],
+  ['intake-svedjan','Svedjan Bageri','斯德哥尔摩','咖啡',4.6,1017,'kr 100–200','咖啡馆','Google Maps 收藏；咖啡馆与烘焙店。','感兴趣,待规划,截图收藏,烘焙']
+];
+const intakePlaces=intakeRows.map(([id,name,city,category,rating,reviews,price,sourceCategory,why,tagText])=>({id,name,city,category,rating:rating||null,reviews:reviews||null,price:price||'',sourceCategory,tags:tagText.split(','),why,notes:[rating?`评分 ${rating} · ${Number(reviews).toLocaleString('zh-CN')} 条评价`:'截图未显示评分',price?`价格区间：${price}`:`截图类别：${sourceCategory}`],maps:mapSearch(name.replace(/（分店 [12]）/,'') ,city==='斯德哥尔摩'?'Stockholm':city==='奥斯陆'?'Oslo':'Copenhagen'),date:'',time:'',duration:'',order:99,address:'',images:[],blocks:[],checklist:[]}));
+const importedHotelPattern=/酒店|hotel|hobo|sheraton|sp34|citybox|radisson|locke|mayfair|1 hotel|scandic|喜来登|克拉利奥|梅费尔/i;
+const importedDuplicateNames=['瓦萨沉船博物馆','圆塔','腓特烈教堂','丹麦艺术与设计博物馆','奥斯陆皇宫','奥斯陆市政厅','Fuglen 咖啡店','中央车站','邮轮码头','Go Nordic Cruiseline | Oslo'];
+function normalizeImportedName(name){return String(name||'').toLowerCase().replace(/[\s·（）()\-–—]/g,'')}
+function mergeImportedPlaces(existing){
+  const removedFinalNames=['Markuskyrkan','Noma','Tim Wendelboe Offices, Roastery …','Tim Wendelboe','ABEN Kødbyen'];
+  const cleaned=existing.filter(place=>!removedFinalNames.some(name=>normalizeImportedName(name)===normalizeImportedName(place.name))&&(place.date||(!importedHotelPattern.test(`${place.name||''} ${place.category||''}`)&&!importedDuplicateNames.some(name=>normalizeImportedName(name)===normalizeImportedName(place.name)))));
+  const keys=new Set(cleaned.map(place=>`${normalizeImportedName(place.name)}|${normalizeImportedName(place.city)}`));
+  intakePlaces.forEach(place=>{const key=`${normalizeImportedName(place.name)}|${normalizeImportedName(place.city)}`;if(!keys.has(key)){cleaned.push(place);keys.add(key)}});
+  return cleaned;
+}
+const FINAL_PLAN_VERSION='2026-09-24-final-itinerary-v3';
+function applyFinalPlan(list){
+  list.forEach(p=>{if(String(p.id||'').startsWith('intake-')){p.date='';p.time='';p.order=99}});
+  const byName=name=>list.find(p=>p.name===name);
+  const set=(name,date,time,order,extra={})=>{const p=byName(name);if(!p)return;p.date=date;p.time=time;p.order=order;Object.assign(p,extra)};
+  const note=(name,text,booking)=>{const p=byName(name);if(!p)return;p.planNote=text;if(booking)p.booking=booking};
+
+  set('新港','2026-10-01','09:30',1);
+  set('腓特烈教堂','2026-10-01','10:10',2);
+  set('阿美琳堡宫区域','2026-10-01','10:40',3);
+  set('House of Finn Juhl','2026-10-01','11:30',4);
+  set('Frama','2026-10-01','13:15',5);
+  set('Montana','2026-10-01','13:15',5);
+  set('丹麦艺术与设计博物馆','2026-10-01','14:15',6);
+  set('小美人鱼雕像','2026-10-01','17:00',7);
+  set('Hooked','2026-10-01','19:00',8);
+  note('Frama','与 Montana 二选一，不必两家都去','🟡 出发前核实');
+  note('Montana','与 Frama 二选一，不必两家都去','🟡 出发前核实');
+  note('House of Finn Juhl','设计主线；出发前确认展厅开放和是否需要预约','🟡 出发前核实');
+  note('丹麦艺术与设计博物馆','安排在设计店之后；出发前核实当天开放时间并提前购票','🟡 出发前核实');
+  note('Hooked','晚餐候选，建议提前订位','🟠 建议预约');
+
+  set('管风琴教堂','2026-10-02','10:00',1);
+  set('TorvehallerneKBH','2026-10-02','11:15',2);
+  set('圆塔','2026-10-02','12:00',3);
+  set('哥本哈根老城区','2026-10-02','12:45',4);
+  set('Strøget 步行街','2026-10-02','13:15',5);
+  set('HAY House','2026-10-02','13:45',6);
+  set('Studio Arhoj','2026-10-02','14:20',7);
+  set('Posterland','2026-10-02','14:50',8);
+  set('RAINS','2026-10-02','14:50',8);
+  set('新嘉士伯美术馆','2026-10-02','15:20',9);
+  set('Prolog Coffee Bar Papirøen','2026-10-02','17:00',10);
+  set('丹麦建筑中心（Danish Architecture Center）','2026-10-02','18:00',11);
+  set('ÅBEN Kødbyen','2026-10-02','20:00',12);
+  set('Mad & Kaffe','2026-10-02','20:00',12);
+  note('管风琴教堂','交通：需要从哥本哈根市区专程前往，建议预留往返交通时间；优先安排 10:00 内部参观，出发前确认是否有礼拜、葬礼或临时关闭','🟡 出发前核实');
+  note('Posterland','顺路就进，不为它单独绕路','○ 顺路机动');
+  note('RAINS','顺路就进，不为它单独绕路','○ 顺路机动');
+  note('丹麦建筑中心（Danish Architecture Center）','安排在晚间；出发前核实开放时间并考虑提前购票','🟡 出发前核实');
+  note('ÅBEN Kødbyen','晚餐备选，建议提前订位','🟠 建议预约');
+  note('Mad & Kaffe','晚餐备选，建议提前订位','🟠 建议预约');
+
+  set('Juno the bakery','2026-10-03','08:30',1);
+  set('Ferm Living','2026-10-03','09:45',2);
+  set('Design Market','2026-10-03','09:45',2);
+  set('Audo House','2026-10-03','11:00',3);
+  note('Ferm Living','与 Design Market 二选一；不单独绕路','🟡 出发前核实');
+  note('Design Market','与 Ferm Living 二选一；不单独绕路','🟡 出发前核实');
+  note('Audo House','靠近北部设计街区和邮轮方向；出发前确认开放时间','🟡 出发前核实');
+  ['Hart（分店 1）','Hart（分店 2）','Balue','Netto'].forEach(name=>note(name,'沿途机动点，不单独绕路','○ 顺路机动'));
+
+  set('阿克斯胡斯城堡（Akershus Fortress）','2026-10-04','11:15',1);
+  set('Mamma Pizza','2026-10-04','12:30',2);
+  set('奥斯陆歌剧院','2026-10-04','14:00',3);
+  set('Bjørvika 滨水区域','2026-10-04','14:45',4);
+  set('蒙克美术馆','2026-10-04','15:30',5);
+  set('Den Glade Gris','2026-10-04','19:00',6);
+  note('蒙克美术馆','安排 2 小时；出发前核实开放时间并建议提前购票','🟡 出发前核实');
+  note('Den Glade Gris','晚餐，建议提前订位','🟠 建议预约');
+
+  set('奥斯陆皇宫','2026-10-05','10:00',1);
+  set('卡尔·约翰斯大街','2026-10-05','10:45',2);
+  set('奥斯陆主教堂','2026-10-05','11:30',3);
+  set('Fuglen 咖啡店','2026-10-05','12:00',4);
+  set('奥斯陆市政厅','2026-10-05','14:00',5);
+  set('葛鲁尼洛卡（Grünerløkka）','2026-10-05','15:00',6);
+  set('élan','2026-10-05','16:30',7);
+  set("Taverna'n",'2026-10-05','19:00',8);
+  const peace=byName('诺贝尔和平中心');if(peace){peace.date='';peace.time='';peace.order=99;peace.planNote='本次不进入计划；可以经过附近，但不为其调整路线'}
+  note('奥斯陆皇宫','本次按外部及周边游览安排，出发前确认是否有季节性内部开放','🟡 出发前核实');
+  note('奥斯陆市政厅','安排外观及周边；如进入内部需另行确认开放方式','🟡 出发前核实');
+
+  set('Lennart & Bror Fisk','2026-10-06','18:30',1);
+  note('Lennart & Bror Fisk','斯德哥尔摩抵达后的晚餐，建议提前订位','🟠 建议预约');
+
+  set('斯德哥尔摩老城（Gamla Stan）','2026-10-07','10:00',1);
+  set('斯德哥尔摩皇宫','2026-10-07','10:30',2);
+  set('大广场（Stortorget）','2026-10-07','13:00',3);
+  set('诺贝尔博物馆（Nobel Prize Museum）','2026-10-07','13:30',4);
+  set('骑士岛教堂区域','2026-10-07','15:00',5);
+  set('Skultuna Store（分店 1）','2026-10-07','16:00',6);
+  set('Restaurang Hantverket','2026-10-07','19:00',7);
+  const skultuna2=byName('Skultuna Store（分店 2）');if(skultuna2){skultuna2.date='';skultuna2.time='';skultuna2.order=99;skultuna2.planNote='同名第二分店，本次不单独前往；只选择一家'}
+  set('Svedjan Bageri','2026-10-07','08:30',0);
+  note('骑士岛教堂区域','只安排骑士岛、教堂外观和周边城市空间，不安排室内参观');
+  note('Skultuna Store（分店 1）','两家同名店只选择一家，不为另一家单独前往','○ 顺路机动');
+  note('诺贝尔博物馆（Nobel Prize Museum）','出发前核实当天开放时间并考虑提前购票','🟡 出发前核实');
+  note('Restaurang Hantverket','晚餐，建议提前订位','🟠 建议预约');
+
+  set('瓦萨沉船博物馆','2026-10-08','10:00',1);
+  set('斯堪森（Skansen）','2026-10-08','12:15',2);
+  set('Djurgården 岛区域','2026-10-08','17:00',4);
+  set('ABBA 博物馆','2026-10-08','15:00',3);
+  note('瓦萨沉船博物馆','建议安排 10:00–11:45；出发前核实最终开放时间并提前购票','🟡 出发前核实');
+  note('斯堪森（Skansen）','当天较早结束，必须放在 ABBA 前；出发前核实最终开放时间','🟡 出发前核实');
+  note('ABBA 博物馆','必须提前购买带指定入场时间的门票，目标 15:00 左右','🔴 需提前预约');
+  note('Djurgården 岛区域','作为博物馆日的散步和返程缓冲，不再额外安排新馆');
+
+  set('斯德哥尔摩市政厅','2026-10-09','10:00',1);
+  set('斯德哥尔摩市中心','2026-10-09','11:15',2);
+  const skultuna2Again=byName('Skultuna Store（分店 2）');
+  if(skultuna2Again&&skultuna2Again.date==='')note('Skultuna Store（分店 2）','仅在当天位置顺路且与已选分店商品不同的情况下补逛','○ 顺路机动');
+  const medieval=byName('中世纪博物馆（Medeltidsmuseet）');
+  if(medieval){medieval.date='';medieval.time='';medieval.order=99;medieval.planNote='截图显示暂时停业，本次不纳入 Plan A'}
+  note('斯德哥尔摩市政厅','必须提前预约 Guided Tour，目标 10 月 9 日 10:00 英文场','🔴 需提前预约');
+  note('斯德哥尔摩市中心','返程前自由活动，不要排满；约 15:30 前往阿兰达机场');
+  return list;
+}
+places=mergeImportedPlaces(places);
+if(localStorage.getItem(FINAL_PLAN_VERSION)!==FINAL_PLAN_VERSION){places=applyFinalPlan(places);localStorage.setItem(FINAL_PLAN_VERSION,FINAL_PLAN_VERSION)}
+persist();
+renderAll();
+</script>
+</body>
+</html>
