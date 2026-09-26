@@ -81,7 +81,7 @@
     .filter{border:1px solid var(--line);background:#fff;border-radius:13px;padding:10px 12px}
     .places-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
     .place{overflow:hidden;transition:.18s transform ease}.place:hover{transform:translateY(-2px)}
-    .cover{height:190px;background:linear-gradient(135deg,#d6d9de,#a8adb5);background-size:cover;background-position:center}
+    .cover{height:190px;background:#e8e8e5;background-size:cover;background-position:center;background-repeat:no-repeat}
     .place-body{padding:16px}.meta{font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
     .place h3{margin:7px 0 6px;font-size:18px}.place p{margin:0 0 13px;color:var(--muted);font-size:14px;line-height:1.5}
     .place-foot{display:flex;justify-content:space-between;align-items:center;gap:8px}
@@ -107,10 +107,13 @@
     .drawer{position:fixed;inset:0;display:none;z-index:50}.drawer.open{display:block}
     .drawer-backdrop{position:absolute;inset:0;background:rgba(15,17,21,.4)}
     .drawer-panel{position:absolute;right:0;top:0;height:100%;width:min(740px,100%);background:#fff;overflow:auto;box-shadow:-20px 0 70px rgba(0,0,0,.18)}
-    .drawer-cover{height:320px;background:linear-gradient(135deg,#d6d9de,#a8adb5);background-size:cover;background-position:center;position:relative}
+    .drawer-cover{height:320px;background:#e8e8e5;background-size:cover;background-position:center;background-repeat:no-repeat;position:relative}
     .close{position:absolute;right:20px;top:20px;width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.94);font-size:20px}
     .drawer-content{padding:28px}.drawer-content h2{font-size:30px;margin:0 0 8px}.subline{color:var(--muted);line-height:1.6}
-    .map-link{display:inline-flex;margin-top:15px;background:var(--dark);color:#fff;text-decoration:none;padding:11px 14px;border-radius:12px;font-weight:750}
+    .place-links{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:15px}
+    .map-link,.xhs-link{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;padding:11px 14px;border-radius:12px;font-weight:750}
+    .map-link{background:var(--dark);color:#fff}
+    .xhs-link{background:#ff2442;color:#fff}
     .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
     .detail-box{padding:15px;border:1px solid var(--line);border-radius:15px;background:var(--soft)}
     .detail-box label{display:block;color:var(--muted);font-size:11px;margin-bottom:6px}.detail-box b{font-size:14px}
@@ -132,6 +135,10 @@
     .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
     .field input,.field textarea,.field select{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px 12px;background:#fff}
     .field textarea{min-height:90px;resize:vertical}
+    .field-help{margin:6px 0 0;color:var(--muted);font-size:12px;line-height:1.5}
+    .field-error{display:none;margin:6px 0 0;color:#a1263e;font-size:12px;font-weight:650;line-height:1.5}
+    .field-error.show{display:block}
+    .field input[aria-invalid="true"]{border-color:#c9354e;box-shadow:0 0 0 3px rgba(201,53,78,.12)}
     .helper{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.5}
     .form-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}
     .empty{padding:42px;text-align:center;color:var(--muted)}
@@ -201,13 +208,14 @@
     .micro{border-radius:999px;padding:8px 11px}
     .search,.filter,.field input,.field textarea,.field select,.fx-item input{border-radius:10px;border-color:var(--line)}
     .search:focus,.filter:focus,.field input:focus,.field textarea:focus,.field select:focus,.fx-item input:focus{border-color:#ff9aaa;box-shadow:0 0 0 3px rgba(255,56,92,.12);outline:0}
-    .cover{height:196px;background:linear-gradient(135deg,#e8e8e5,#c9c9c4)}
+    .cover{height:196px;background-color:#e8e8e5;background-size:cover;background-position:center;background-repeat:no-repeat}
     .place h3{font-size:17px;line-height:1.35}
     .tag{background:#fff6f7;border-color:#ffd5dc;color:#a1263e}
     .log-type,.event-kind,.currency-badge{background:#fff0f2;color:#a1263e}
     .map-link{background:var(--accent);border-radius:10px}
+    .xhs-link{border-radius:10px}
     .drawer-panel{box-shadow:-16px 0 44px rgba(34,34,34,.14)}
-    .drawer-cover{height:300px;background:linear-gradient(135deg,#e8e8e5,#c9c9c4)}
+    .drawer-cover{height:300px;background-color:#e8e8e5;background-size:cover;background-position:center;background-repeat:no-repeat}
     .close{width:44px;height:44px}
     .modal-card{border-radius:18px}
     .toast{background:var(--text)}
@@ -250,6 +258,36 @@
       .route{grid-template-columns:1fr}.stats,.expense-summary{gap:8px}#balanceSummary{grid-template-columns:1fr!important}.stat span{font-size:11px}.quick-item{padding:14px}.section-head{flex-direction:column}.section-head small{text-align:left}.people-grid{grid-template-columns:1fr 1fr}.tag{font-size:10px}
     }
     @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}.place:hover,.nav button:hover{transform:none}}
+    .tax-hero{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;margin-bottom:16px}
+    .tax-lead{padding:17px;border:1px solid #ffd5dc;border-radius:14px;background:#fff7f8}
+    .tax-lead h3{margin:0 0 7px;font-size:16px;color:#a1263e}.tax-lead p{margin:0;color:#5e3038;font-size:13px;line-height:1.65}
+    .tax-status{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.tax-status span{display:inline-flex;align-items:center;gap:5px;padding:6px 9px;border-radius:999px;font-size:11px;font-weight:800}
+    .tax-status .good{background:#eaf7ef;color:#216b3b}.tax-status .warn{background:#fff3df;color:#8a5700}.tax-status .info{background:#f1f3f6;color:#555d68}
+    .tax-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}
+    .tax-card{padding:16px;border:1px solid var(--line);border-radius:14px;background:#fff}.tax-card h3{margin:0 0 8px;font-size:16px}.tax-card p{margin:0;color:#4f5661;font-size:13px;line-height:1.65}.tax-card ul{margin:9px 0 0;padding-left:18px}.tax-card li{color:#4f5661;font-size:13px;line-height:1.65}.tax-card strong{color:var(--text)}
+    .tax-card.alert{border-color:#f1d6a8;background:#fffaf0}.tax-card.alert h3{color:#8a5700}
+    .tax-subhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:22px 0 10px}.tax-subhead h3{margin:0;font-size:16px}.tax-subhead small{color:var(--muted);font-size:12px}
+    .tax-table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:13px}.tax-table{width:100%;min-width:620px;border-collapse:collapse}.tax-table th,.tax-table td{padding:11px 12px;text-align:left;border-bottom:1px solid var(--line);font-size:13px;vertical-align:top;line-height:1.55}.tax-table th{background:var(--soft);color:var(--muted);font-size:12px}.tax-table tr:last-child td{border-bottom:0}
+    .tax-flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}.tax-step{padding:13px;border:1px solid var(--line);border-radius:12px;background:var(--soft)}.tax-step b{display:flex;align-items:center;gap:7px;margin-bottom:5px;font-size:13px}.tax-step i{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-style:normal;font-size:11px}.tax-step p{margin:0;color:#555d68;font-size:12px;line-height:1.55}
+    .tax-checklist{display:grid;gap:8px}.tax-checklist label{display:flex;align-items:flex-start;gap:9px;padding:10px 12px;border:1px solid var(--line);border-radius:11px;background:#fff;cursor:pointer}.tax-checklist input{width:18px;height:18px;accent-color:var(--accent);flex:0 0 auto;margin-top:1px}.tax-checklist span{font-size:13px;line-height:1.5}.tax-count{font-weight:800;color:var(--accent)}.tax-note{padding:12px 13px;border-left:3px solid #ffb95c;border-radius:0 9px 9px 0;background:#fffaf0;color:#6d4b15;font-size:12px;line-height:1.65;margin-top:12px}.tax-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.tax-links a{display:inline-flex;align-items:center;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:#fff;color:#a1263e;text-decoration:none;font-size:12px;font-weight:750}.tax-links a:hover{border-color:#ffb6c3;background:#fff7f8}
+    @media(max-width:820px){.tax-hero,.tax-grid,.tax-flow{grid-template-columns:1fr}.tax-table-wrap{margin-left:-2px;margin-right:-2px}.tax-subhead{align-items:flex-start;flex-direction:column;gap:4px}.tax-card{padding:14px}}
+
+    /* Shared daily artwork: preserve the complete route and lettering. */
+    .day-cover{display:block;margin:0 0 20px;border-radius:14px;overflow:hidden;background:#fff0f2;line-height:0}
+    .day-cover img{display:block;width:100%;height:auto;max-width:100%}
+    .day-cover:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+    #dayCover[hidden]{display:none}
+    .next-card.with-cover{padding:0;overflow:hidden;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:0}
+    .next-card.with-cover #nextCover{align-self:center;min-width:0}
+    .next-card.with-cover .day-cover{margin:0;border-radius:0}
+    .next-copy{padding:24px;min-width:0;align-self:center}
+    .next-date{font-size:13px;font-weight:700;color:var(--muted);margin-bottom:12px}
+    .next-copy p{line-height:1.65}
+    @media(max-width:820px){
+      .next-card.with-cover{grid-template-columns:minmax(0,1fr);padding:0}
+      .next-copy{padding:18px}
+      .day-cover{margin-bottom:16px;border-radius:10px}
+    }
   </style>
 </head>
 <body>
@@ -296,13 +334,14 @@
         </div>
       </div>
 
-      <div class="card next-card" style="margin-top:19px">
-        <div class="date-box"><span>10 月</span><b>01</b><span>哥本哈根</span></div>
-        <div>
+      <div class="card next-card with-cover" style="margin-top:19px">
+        <div id="nextCover"></div>
+        <div class="next-copy">
           <div class="meta">下一段重点行程</div>
           <h2 style="margin:7px 0 9px">哥本哈根城市游览</h2>
+          <div class="next-date" id="nextDate"></div>
           <p style="color:var(--muted);margin:0 0 14px">新港 → 腓特烈教堂 → 阿美琳堡宫区域 → 丹麦艺术与设计博物馆 → 小美人鱼</p>
-          <button class="secondary" onclick="switchView('itinerary')">查看当天行程 →</button>
+          <button class="secondary" onclick="openFeaturedDay()">查看当天行程 →</button>
         </div>
       </div>
 
@@ -333,6 +372,7 @@
           <div class="day-title"><h2 id="dayTitle">—</h2><p id="daySub">—</p></div>
           <button class="secondary" onclick="switchView('places')">打开地点库</button>
         </div>
+        <div id="dayCover" hidden></div>
         <div class="day-advice" id="dayAdvice" hidden></div>
         <div class="timeline" id="timeline"></div>
       </div>
@@ -415,6 +455,80 @@
         <div id="balanceSummary" class="grid stats" style="grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:16px"></div>
         <div id="settlementList" class="settlement-list"></div>
       </div>
+
+      <div class="card section" id="taxGuide">
+        <div class="section-head">
+          <div><h2>退税攻略</h2><small>结合本次哥本哈根 → 奥斯陆 → 斯德哥尔摩 → 北京路线</small></div>
+          <span class="currency-badge">出发前再核实官方要求</span>
+        </div>
+
+        <div class="tax-hero">
+          <div class="tax-lead">
+            <h3>推荐方案：丹麦、瑞典集中退税，挪威单独处理</h3>
+            <p>丹麦和瑞典购物材料分别保留，最后从斯德哥尔摩阿兰达机场离开欧盟时办理验证及退款。挪威不属于欧盟增值税区，而且本次从奥斯陆乘火车前往瑞典，不能默认火车上有可用的人工退税柜台。</p>
+            <div class="tax-status"><span class="good">✓ 丹麦 + 瑞典：ARN 集中办理</span><span class="warn">! 挪威：火车离境先确认</span><span class="info">退税单不能跨国合并</span></div>
+          </div>
+          <div class="tax-card alert">
+            <h3>对本次预算的影响</h3>
+            <p><strong>丹麦、瑞典</strong>的预计退款可以单独记录，但应以退税公司最终退款为准。</p>
+            <p style="margin-top:8px"><strong>挪威</strong>如果无法在离境时完成验证，就不要把预计退税额计入费用预算。</p>
+          </div>
+        </div>
+
+        <div class="tax-subhead"><h3>三国处理方式</h3><small>门槛和实际退款以购物当日退税公司及海关规则为准</small></div>
+        <div class="tax-grid">
+          <div class="tax-card">
+            <h3>丹麦 · DKK</h3>
+            <p><strong>门槛：</strong>同店消费超过 300 DKK。</p>
+            <ul><li>购物时出示护照，索取 Tax Free Form 和原始小票。</li><li>商品保持未使用，并随身携带至斯德哥尔摩机场检查。</li><li>丹麦 PIE VAT 退税单需由瑞典海关验证。</li></ul>
+          </div>
+          <div class="tax-card">
+            <h3>瑞典 · SEK</h3>
+            <p><strong>门槛：</strong>通常从 200 SEK 起。</p>
+            <ul><li>购物时索取 Tax Free Form，优先确认 Global Blue / Planet 流程。</li><li>在 ARN 先办理退税，再托运行李。</li><li>扣除手续费后，以退税单和退款记录为准。</li></ul>
+          </div>
+          <div class="tax-card alert">
+            <h3>挪威 · NOK</h3>
+            <p><strong>Global Blue 普通商品：</strong>同店同日约 315 NOK 起，通常需在购买后一个月内出口。</p>
+            <ul><li>奥斯陆 → 斯德哥尔摩火车上目前没有确认的官方退税服务。</li><li>RD-0032 需要店家配合，并在离境时到有人值守的海关验证。</li><li>大额购物建议放在丹麦或瑞典，挪威以小额购物为主。</li></ul>
+          </div>
+        </div>
+
+        <div class="tax-subhead"><h3>斯德哥尔摩阿兰达机场 ARN 操作流程</h3><small>对应 10 月 9 日 CA912 返程日</small></div>
+        <div class="tax-flow">
+          <div class="tax-step"><b><i>1</i>购物时备齐材料</b><p>护照、Tax Free Form、原始小票和未使用的退税商品分别整理。</p></div>
+          <div class="tax-step"><b><i>2</i>托运前先退税</b><p>携带全部退税商品前往相应柜台，完成商品检查和出口验证。</p></div>
+          <div class="tax-step"><b><i>3</i>分别处理退税单</b><p>丹麦、瑞典不同国家和退税公司不能合并；丹麦 PIE VAT 需瑞典海关验证。</p></div>
+          <div class="tax-step"><b><i>4</i>领取退款再托运</b><p>建议退回信用卡，并保留退款凭证；需要邮寄的表单按公司要求投递。</p></div>
+        </div>
+        <div class="tax-note"><strong>机场提醒：</strong>Global Blue 在 T5 出发大厅设有安检前 / 安检后服务点；安检前柜台位于 Check-in Zone 6，公布营业时间约为 05:00–19:00。10 月 9 日建议约 15:00 前抵达机场，整体至少预留约 4 小时给退税、托运和安检；营业时间与柜台位置请出发前再次确认。</div>
+
+        <div class="tax-subhead"><h3>挪威火车离境风险</h3><small>10 月 6 日 Oslo → Stockholm</small></div>
+        <div class="tax-card alert">
+          <p>本次从挪威乘跨境火车离境，不建议假定乘车途中可以办理退税。可选方案包括：提前确认陆路口岸是否有柜台及营业时间、改乘飞机从挪威离境，或控制挪威购物金额。任何大额消费在付款前，应让商家或退税公司书面确认这趟具体火车的退税方式；无法确认时，不把退款计入预算。</p>
+        </div>
+
+        <div class="tax-subhead"><h3>出行退税检查清单</h3><small><span id="taxChecklistCount" class="tax-count">0/7</span> 已完成</small></div>
+        <div class="tax-checklist">
+          <label><input type="checkbox" onchange="updateTaxChecklist()"><span>购买时出示护照，索取退税单及原始小票</span></label>
+          <label><input type="checkbox" onchange="updateTaxChecklist()"><span>核对退税单上的姓名、护照号及退款信息</span></label>
+          <label><input type="checkbox" onchange="updateTaxChecklist()"><span>商品保持未使用，保留包装和标签</span></label>
+          <label><input type="checkbox" onchange="updateTaxChecklist()"><span>把退税商品集中放置，机场验证完成后再托运</span></label>
+          <label><input type="checkbox" onchange="updateTaxChecklist()"><span>丹麦、瑞典、挪威的退税单分别整理</span></label>
+          <label><input type="checkbox" onchange="updateTaxChecklist()"><span>斯德哥尔摩机场预留约 4 小时办理退税、托运和安检</span></label>
+          <label><input type="checkbox" onchange="updateTaxChecklist()"><span>提前查看退税公司的营业时间和退款状态</span></label>
+        </div>
+        <div class="tax-note"><strong>入境税提醒：</strong>退税不等于免除下一站的入境税费。丹麦商品带入挪威、挪威商品带入瑞典时，仍需遵守对应国家对非本国 / 非欧盟商品的入境申报及税费规定。</div>
+
+        <div class="tax-subhead"><h3>官方信息入口</h3><small>链接为官方首页或服务入口，出发前查看最新规定</small></div>
+        <div class="tax-links">
+          <a href="https://www.tullverket.se/en/" target="_blank" rel="noopener">瑞典海关 Tullverket ↗</a>
+          <a href="https://www.swedavia.com/arlanda/service/tax-refund/" target="_blank" rel="noopener">阿兰达机场退税 ↗</a>
+          <a href="https://www.cph.dk/en/practical/tax-refund" target="_blank" rel="noopener">哥本哈根机场退税 ↗</a>
+          <a href="https://www.toll.no/en/" target="_blank" rel="noopener">挪威海关 Tolletaten ↗</a>
+          <a href="https://www.globalblue.com/tax-free-shopping" target="_blank" rel="noopener">Global Blue ↗</a>
+        </div>
+      </div>
     </section>
   </main>
 </div>
@@ -439,6 +553,7 @@
       <div class="field"><label>日期</label><input id="fDate" type="date"/></div>
       <div class="field"><label>时间</label><input id="fTime" type="time"/></div>
       <div class="field full"><label>Google Maps 链接</label><input id="fMaps" placeholder="可粘贴 Google Maps 分享链接；留空会自动生成搜索链接"/></div>
+      <div class="field full"><label for="fXhs">小红书帖子链接</label><input id="fXhs" type="url" inputmode="url" placeholder="粘贴 xhslink.com 或 xiaohongshu.com 帖子链接" aria-describedby="fXhsHelp fXhsError" onblur="validateXhsLink()"/><p class="field-help" id="fXhsHelp">支持小红书分享短链接和帖子网页链接，可留空。</p><p class="field-error" id="fXhsError" role="alert">请输入有效的小红书帖子链接。</p></div>
       <div class="field full"><label>地址</label><input id="fAddress" placeholder="例如：Bredgade 68, Copenhagen"/></div>
       <div class="field full"><label>为什么去 / 这个地点的价值</label><textarea id="fWhy" placeholder="写下最核心的理由，便于旅行现场快速回忆。"></textarea></div>
       <div class="field full"><label>标签</label><input id="fTags" placeholder="例如：设计, 家具, 必看, 室内"/></div>
@@ -500,10 +615,20 @@
 <script>
 const STORAGE_KEY='travel_places_v3_itinerary_cn';
 const EXP_KEY='travel_expenses_v3_itinerary_cn';
+const FEATURED_DATE='2026-10-01';
+const DAY_COVERS={"2026-09-30": {"src": "assets/days/2026-09-30.png", "title": "北京 → 哥本哈根", "width": 1448, "height": 1086}, "2026-10-01": {"src": "assets/days/2026-10-01.png", "title": "港口、王宫与丹麦设计", "width": 1448, "height": 1086}, "2026-10-02": {"src": "assets/days/2026-10-02.png", "title": "教堂、老城与建筑设计", "width": 1448, "height": 1086}, "2026-10-03": {"src": "assets/days/2026-10-03.png", "title": "北部街区 → 过夜邮轮", "width": 1448, "height": 1086}, "2026-10-04": {"src": "assets/days/2026-10-04.png", "title": "奥斯陆港口与 Bjørvika", "width": 1448, "height": 1086}, "2026-10-05": {"src": "assets/days/2026-10-05.png", "title": "皇宫、市中心与 Grünerløkka", "width": 1448, "height": 1086}, "2026-10-06": {"src": "assets/days/2026-10-06.png", "title": "奥斯陆 → 斯德哥尔摩", "width": 1448, "height": 1086}, "2026-10-07": {"src": "assets/days/2026-10-07.png", "title": "斯德哥尔摩老城", "width": 1448, "height": 1086}, "2026-10-08": {"src": "assets/days/2026-10-08.png", "title": "Djurgården 博物馆日", "width": 1448, "height": 1086}, "2026-10-09": {"src": "assets/days/2026-10-09.png", "title": "市政厅与返程", "width": 1448, "height": 1086}};
+function dayCoverMarkup(date){
+  const cover=DAY_COVERS[date];
+  if(!cover)return '';
+  const label=`${dateCN(date)} · ${cover.title}，行程封面`;
+  return `<a class="day-cover" href="${cover.src}" target="_blank" rel="noopener" aria-label="${escapeAttr(label)}（打开原图）"><img src="${cover.src}" width="${cover.width}" height="${cover.height}" alt="${escapeAttr(label)}" decoding="async" loading="lazy"></a>`;
+}
+function openFeaturedDay(){activeDate=FEATURED_DATE;switchView('itinerary')}
+
 
 const defaultPlaces=[{"id":"nyhavn","name":"新港","city":"哥本哈根","category":"景观","date":"2026-10-01","time":"","duration":"","order":1,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Nyhavn+Copenhagen","why":"10月1日行程单安排地点。","tags":["城市漫步"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"frederiks-church","name":"腓特烈教堂","city":"哥本哈根","category":"建筑","date":"2026-10-01","time":"","duration":"","order":2,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Frederik%27s+Church+Copenhagen","why":"10月1日行程单安排地点。","tags":["建筑"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"amalienborg","name":"阿美琳堡宫区域","city":"哥本哈根","category":"建筑","date":"2026-10-01","time":"","duration":"","order":3,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Amalienborg+Palace+Copenhagen","why":"10月1日行程单安排地点。","tags":["建筑","城市漫步"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"designmuseum","name":"丹麦艺术与设计博物馆","city":"哥本哈根","category":"博物馆","date":"2026-10-01","time":"","duration":"","order":4,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Designmuseum+Danmark","why":"10月1日行程单安排地点。","tags":["设计","博物馆"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"little-mermaid","name":"小美人鱼雕像","city":"哥本哈根","category":"景观","date":"2026-10-01","time":"","duration":"","order":5,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=The+Little+Mermaid+Copenhagen","why":"10月1日行程单安排地点。","tags":["城市漫步"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"round-tower","name":"圆塔","city":"哥本哈根","category":"建筑","date":"2026-10-02","time":"","duration":"","order":1,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=The+Round+Tower+Copenhagen","why":"10月2日行程单安排地点。","tags":["建筑"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"copenhagen-old-town","name":"哥本哈根老城区","city":"哥本哈根","category":"景观","date":"2026-10-02","time":"","duration":"","order":2,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Copenhagen+Old+Town","why":"10月2日行程单安排地点。","tags":["城市漫步"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"stroget","name":"Strøget 步行街","city":"哥本哈根","category":"购物","date":"2026-10-02","time":"","duration":"","order":3,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Stroget+Copenhagen","why":"10月2日行程单安排地点。","tags":["城市漫步","购物"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"hayhouse","name":"HAY House","city":"哥本哈根","category":"购物","date":"2026-10-02","time":"","duration":"","order":4,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=HAY+House+Copenhagen","why":"10月2日行程单安排地点。","tags":["设计","购物"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"glyptotek","name":"新嘉士伯美术馆","city":"哥本哈根","category":"博物馆","date":"2026-10-02","time":"","duration":"","order":5,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Ny+Carlsberg+Glyptotek+Copenhagen","why":"10月2日行程单安排地点。","tags":["博物馆"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"grundtvig","name":"管风琴教堂","city":"哥本哈根","category":"建筑","date":"2026-10-03","time":"","duration":"","order":1,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Grundtvig%27s+Church+Copenhagen","why":"10月3日行程单安排地点。","tags":["建筑"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"oslo-opera","name":"奥斯陆歌剧院","city":"奥斯陆","category":"建筑","date":"2026-10-04","time":"","duration":"","order":2,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Oslo+Opera+House","why":"10月4日行程单安排地点。","tags":["建筑"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"munch","name":"蒙克美术馆","city":"奥斯陆","category":"博物馆","date":"2026-10-04","time":"","duration":"","order":3,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=MUNCH+Oslo","why":"10月4日行程单安排地点。","tags":["博物馆"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"bjorvika","name":"Bjørvika 滨水区域","city":"奥斯陆","category":"景观","date":"2026-10-04","time":"","duration":"","order":4,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Bjorvika+Oslo","why":"10月4日行程单安排地点。","tags":["滨水","城市漫步"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"fuglen","name":"Fuglen 咖啡店","city":"奥斯陆","category":"咖啡","date":"2026-10-05","time":"","duration":"","order":1,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Fuglen+Oslo","why":"10月5日行程单安排地点。","tags":["咖啡"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"oslo-cathedral","name":"奥斯陆主教堂","city":"奥斯陆","category":"建筑","date":"2026-10-05","time":"","duration":"","order":2,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Oslo+Cathedral","why":"10月5日行程单安排地点。","tags":["建筑"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"karl-johans","name":"卡尔·约翰斯大街","city":"奥斯陆","category":"景观","date":"2026-10-05","time":"","duration":"","order":3,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Karl+Johans+gate+Oslo","why":"10月5日行程单安排地点。","tags":["城市漫步"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"royal-palace-oslo","name":"奥斯陆皇宫","city":"奥斯陆","category":"建筑","date":"2026-10-05","time":"","duration":"","order":4,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=The+Royal+Palace+Oslo","why":"10月5日行程单安排地点。","tags":["建筑"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"oslo-city-hall","name":"奥斯陆市政厅","city":"奥斯陆","category":"建筑","date":"2026-10-05","time":"","duration":"","order":5,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Oslo+City+Hall","why":"10月5日行程单安排地点。","tags":["建筑"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"nobel-peace","name":"诺贝尔和平中心","city":"奥斯陆","category":"博物馆","date":"2026-10-05","time":"","duration":"","order":6,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Nobel+Peace+Center+Oslo","why":"10月5日行程单安排地点。","tags":["博物馆"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"gamla-stan","name":"斯德哥尔摩老城（Gamla Stan）","city":"斯德哥尔摩","category":"景观","date":"2026-10-07","time":"","duration":"","order":1,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Gamla+Stan+Stockholm","why":"10月7日行程单安排地点。","tags":["城市漫步"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"royal-palace-stockholm","name":"斯德哥尔摩皇宫","city":"斯德哥尔摩","category":"建筑","date":"2026-10-07","time":"","duration":"","order":2,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=The+Royal+Palace+Stockholm","why":"10月7日行程单安排地点。","tags":["建筑"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"stortorget","name":"大广场（Stortorget）","city":"斯德哥尔摩","category":"景观","date":"2026-10-07","time":"","duration":"","order":3,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Stortorget+Stockholm","why":"10月7日行程单安排地点。","tags":["城市漫步"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"riddarholmen","name":"骑士岛教堂区域","city":"斯德哥尔摩","category":"建筑","date":"2026-10-07","time":"","duration":"","order":4,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Riddarholmen+Church+Stockholm","why":"10月7日行程单安排地点。","tags":["建筑"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"vasa","name":"瓦萨沉船博物馆","city":"斯德哥尔摩","category":"博物馆","date":"2026-10-08","time":"","duration":"","order":1,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Vasa+Museum+Stockholm","why":"10月8日行程单安排地点。","tags":["博物馆"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"abba","name":"ABBA 博物馆","city":"斯德哥尔摩","category":"博物馆","date":"2026-10-08","time":"","duration":"","order":2,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=ABBA+The+Museum+Stockholm","why":"10月8日行程单安排地点。","tags":["博物馆"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"djurgarden","name":"Djurgården 岛区域","city":"斯德哥尔摩","category":"景观","date":"2026-10-08","time":"","duration":"","order":3,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Djurgarden+Stockholm","why":"10月8日行程单安排地点。","tags":["城市漫步"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"stockholm-city-hall","name":"斯德哥尔摩市政厅","city":"斯德哥尔摩","category":"建筑","date":"2026-10-09","time":"","duration":"","order":1,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Stockholm+City+Hall","why":"10月9日行程单安排地点。","tags":["建筑"],"notes":[],"checklist":[],"images":[],"blocks":[]},{"id":"stockholm-center","name":"斯德哥尔摩市中心","city":"斯德哥尔摩","category":"景观","date":"2026-10-09","time":"","duration":"","order":2,"address":"","maps":"https://www.google.com/maps/search/?api=1&query=Central+Stockholm","why":"10月9日行程单安排地点。","tags":["城市漫步"],"notes":[],"checklist":[],"images":[],"blocks":[]}];
 
-const tripEvents=[{"id":"flight-out","type":"飞机","date":"2026-09-30","time":"13:25","order":1,"city":"北京 → 哥本哈根","name":"CA877 · 北京首都 T3 → 哥本哈根 T3","detail":"13:25 从北京首都机场 T3 起飞，17:05 抵达哥本哈根机场 T3。","subdetail":"抵达后乘公共交通 / 出租车前往酒店。"},{"id":"arrival-transfer","type":"接驳","date":"2026-09-30","time":"17:05","order":2,"city":"哥本哈根","name":"机场 → Hotel Hans","detail":"抵达哥本哈根后前往酒店，办理入住并休息。","subdetail":"公共交通 / 出租车。"},{"id":"cruise-out","type":"邮轮","date":"2026-10-03","time":"16:30","order":50,"city":"哥本哈根 → 奥斯陆","name":"M/S Nordic Crown · 哥本哈根 → 奥斯陆","detail":"16:30 从哥本哈根出发，次日 10:00 抵达奥斯陆。","subdetail":"过夜邮轮，直达。"},{"id":"cruise-arrive","type":"邮轮","date":"2026-10-04","time":"10:00","order":1,"city":"奥斯陆","name":"M/S Nordic Crown 抵达奥斯陆","detail":"10:00 抵达奥斯陆，之后开始市内游览。","subdetail":"奥斯陆市内乘公共交通并步行。"},{"id":"train-oslo-stockholm","type":"火车","date":"2026-10-06","time":"11:46","order":1,"city":"奥斯陆 → 斯德哥尔摩","name":"SJ 3000 · Train 638","detail":"奥斯陆 11:46 出发 → 斯德哥尔摩 17:16 抵达。","subdetail":"全程 5 小时 30 分，直达。"},{"id":"stockholm-hotel-transfer","type":"接驳","date":"2026-10-06","time":"17:16","order":2,"city":"斯德哥尔摩","name":"抵达后前往 Sheraton Stockholm Hotel","detail":"17:16 抵达斯德哥尔摩后前往酒店办理入住。","subdetail":""},{"id":"airport-transfer","type":"接驳","date":"2026-10-09","time":"","order":50,"city":"斯德哥尔摩","name":"市中心 → 阿兰达机场","detail":"游览斯德哥尔摩市政厅及市中心后，乘市内交通前往阿兰达机场。","subdetail":""},{"id":"flight-back","type":"飞机","date":"2026-10-09","time":"19:10","order":60,"city":"斯德哥尔摩 → 北京","name":"CA912 · 阿兰达 T5 → 北京首都 T3","detail":"19:10 从斯德哥尔摩阿兰达机场 T5 起飞，次日 09:40 抵达北京首都机场 T3。","subdetail":"航班过夜。"}];
+const tripEvents=[{"id":"flight-out","type":"飞机","date":"2026-09-30","time":"13:25","order":1,"city":"北京 → 哥本哈根","name":"CA877 · 北京首都 T3 → 哥本哈根 T3","detail":"13:25 从北京首都机场 T3 起飞，17:05 抵达哥本哈根机场 T3。","subdetail":"抵达后乘公共交通 / 出租车前往酒店。"},{"id":"arrival-transfer","type":"接驳","date":"2026-09-30","time":"17:05","order":2,"city":"哥本哈根","name":"机场 → Hotel Hans","detail":"抵达哥本哈根后前往酒店，办理入住并休息。","subdetail":"公共交通 / 出租车。"},{"id":"cruise-out","type":"邮轮","date":"2026-10-03","time":"16:30","order":50,"city":"哥本哈根 → 奥斯陆","name":"M/S Nordic Crown · 哥本哈根 → 奥斯陆","detail":"16:30 从哥本哈根出发，次日 10:00 抵达奥斯陆。","subdetail":"过夜邮轮，直达。"},{"id":"cruise-arrive","type":"邮轮","date":"2026-10-04","time":"10:00","order":1,"city":"奥斯陆","name":"M/S Nordic Crown 抵达奥斯陆","detail":"10:00 抵达奥斯陆，之后开始市内游览。","subdetail":"奥斯陆市内乘公共交通并步行。"},{"id":"train-oslo-stockholm","type":"火车","date":"2026-10-06","time":"11:46","order":1,"city":"奥斯陆 → 斯德哥尔摩","name":"SJ 3000 · Train 638","detail":"奥斯陆 11:46 出发 → 斯德哥尔摩 17:16 抵达。","subdetail":"全程 5 小时 30 分，直达。"},{"id":"stockholm-hotel-transfer","type":"接驳","date":"2026-10-06","time":"17:16","order":2,"city":"斯德哥尔摩","name":"抵达后前往 Sheraton Stockholm Hotel","detail":"17:16 抵达斯德哥尔摩后前往酒店办理入住。","subdetail":""},{"id":"airport-transfer","type":"接驳","date":"2026-10-09","time":"15:30","order":50,"city":"斯德哥尔摩","name":"市中心 → 阿兰达机场","detail":"游览斯德哥尔摩市政厅及市中心后，乘市内交通前往阿兰达机场。","subdetail":""},{"id":"flight-back","type":"飞机","date":"2026-10-09","time":"19:10","order":60,"city":"斯德哥尔摩 → 北京","name":"CA912 · 阿兰达 T5 → 北京首都 T3","detail":"19:10 从斯德哥尔摩阿兰达机场 T5 起飞，次日 09:40 抵达北京首都机场 T3。","subdetail":"航班过夜。"}];
 
 const tripAssets={"flights":[{"type":"飞机","title":"CA877 · 去程","date":"2026-09-30","route":"北京首都 T3 → 哥本哈根 T3","time":"13:25 → 17:05","detail":"北京出发，抵达哥本哈根后前往酒店。"},{"type":"飞机","title":"CA912 · 返程","date":"2026-10-09","route":"斯德哥尔摩阿兰达 T5 → 北京首都 T3","time":"19:10 → 09:40（次日）","detail":"航班过夜。"}],"cruise":[{"type":"邮轮","title":"M/S Nordic Crown","date":"2026-10-03","route":"哥本哈根 → 奥斯陆","time":"16:30 → 10:00（次日）","detail":"过夜邮轮，直达。"}],"trains":[{"type":"火车","title":"SJ 3000 · Train 638","date":"2026-10-06","route":"奥斯陆 → 斯德哥尔摩","time":"11:46 → 17:16","detail":"全程 5 小时 30 分，直达。"}],"hotels":[{"type":"酒店","title":"Hotel Hans","date":"2026-09-30","route":"哥本哈根 · 3 晚","time":"9 月 30 日 – 10 月 3 日","detail":"Åboulevard 29, Norrebro, Copenhagen, Denmark","maps":"https://www.google.com/maps/search/?api=1&query=Hotel+Hans+%C3%85boulevard+29+Copenhagen"},{"type":"酒店","title":"Hobo Oslo","date":"2026-10-04","route":"奥斯陆 · 2 晚","time":"10 月 4 日 – 10 月 6 日","detail":"Dronningens gate 23-25, 0154 Oslo, Norway","maps":"https://www.google.com/maps/search/?api=1&query=Hobo+Oslo+Dronningens+gate+23-25+Oslo"},{"type":"酒店","title":"Sheraton Stockholm Hotel","date":"2026-10-06","route":"斯德哥尔摩 · 3 晚","time":"10 月 6 日 – 10 月 9 日","detail":"Tegelbacken 6, Stockholm, Sweden","maps":"https://www.google.com/maps/search/?api=1&query=Sheraton+Stockholm+Hotel+Tegelbacken+6+Stockholm"}]};
 
@@ -524,7 +649,7 @@ const dayAdvice={
   '2026-10-05':['奥斯陆市中心和 Grünerløkka 以步行 + 必要时单次票为主；天气差或多次乘车时再比较 24h 交通票，不专门购买 Oslo Pass。'],
   '2026-10-06':['抵达斯德哥尔摩后：中央站步行到 Sheraton；市内交通单独购票，不将景点通票当交通票。'],
   '2026-10-07':['景点票建议：可比较 Go City Essentials 3 景点版，拟用于 Royal Palace、Vasa、Skansen；Nobel Prize Museum 单独购票。购买前核对当期包含场馆、预约规则及有效期。'],
-  '2026-10-08':['景点票建议：若购买 Go City Essentials，可用于 Vasa + Skansen（须核对产品条款）；ABBA Museum 仍单独购买指定时段门票。'],
+  '2026-10-08':['景点票建议：若购买 Go City Essentials，可用于 Vasa + Skansen（须核对产品条款）。'],
   '2026-10-09':['返程交通：从 Sheraton 步行至中央站乘 Arlanda Express；Stockholm City Hall Guided Tour 单独预约/购票，不计入 Go City Essentials。']
 };
 
@@ -548,16 +673,19 @@ function load(key,fallback){
 function loadFxRates(){
   try{
     const saved=JSON.parse(localStorage.getItem(FX_KEY)||'null');
-    return saved?{...defaultFxRates,...saved}:{...defaultFxRates};
+    return Object.fromEntries(Object.entries(defaultFxRates).map(([cur,fallback])=>[cur,cur==='CNY'?1:(Number.isFinite(Number(saved?.[cur]))&&Number(saved[cur])>0?Number(saved[cur]):fallback)]));
   }catch(e){return {...defaultFxRates}}
 }
 function saveFxRates(){
-  fxRates={
-    CNY:1,
-    DKK:Number(document.getElementById('fxDKK')?.value||fxRates.DKK||defaultFxRates.DKK),
-    SEK:Number(document.getElementById('fxSEK')?.value||fxRates.SEK||defaultFxRates.SEK),
-    NOK:Number(document.getElementById('fxNOK')?.value||fxRates.NOK||defaultFxRates.NOK)
-  };
+  const next={CNY:1};
+  for(const cur of ['DKK','SEK','NOK']){
+    const value=Number(document.getElementById('fx'+cur)?.value);
+    if(!Number.isFinite(value)||value<=0){
+      showToast('汇率必须是大于 0 的有效数字');renderFxRates();return;
+    }
+    next[cur]=value;
+  }
+  fxRates=next;
   localStorage.setItem(FX_KEY,JSON.stringify(fxRates));
   renderFxRates();renderExpenses();updateExpensePreview();showToast('汇率已更新');
 }
@@ -571,7 +699,8 @@ function renderFxRates(){
   Object.entries(map).forEach(([cur,id])=>{const el=document.getElementById(id);if(el)el.value=Number(fxRates[cur]).toFixed(4)});
 }
 function toCNY(amount,currency){
-  return Number(amount||0)*Number(fxRates[currency]||1);
+  const rate=Number(fxRates[currency]);
+  return Number(amount||0)*(Number.isFinite(rate)&&rate>0?rate:(defaultFxRates[currency]||1));
 }
 function currencySymbol(cur){
   return {CNY:'¥',DKK:'kr',SEK:'kr',NOK:'kr'}[cur]||cur;
@@ -596,6 +725,8 @@ function switchView(view){
 function renderAll(){renderOverview();renderItinerary();renderPlaces();renderLogistics();renderFxRates();renderExpenses()}
 
 function renderOverview(){
+  document.getElementById('nextCover').innerHTML=dayCoverMarkup(FEATURED_DATE);
+  document.getElementById('nextDate').textContent=dateCN(FEATURED_DATE)+' · 哥本哈根';
   document.getElementById('placeCount').textContent=places.length;
   document.getElementById('noteCount').textContent=places.reduce((s,p)=>s+(p.blocks?.length||0)+(p.notes?.length||0),0);
   const key=[tripAssets.flights[0],tripAssets.cruise[0],tripAssets.trains[0],tripAssets.flights[1]];
@@ -616,14 +747,21 @@ function weekdayCN(date){
   const d=new Date(date+'T00:00:00');
   return ['周日','周一','周二','周三','周四','周五','周六'][d.getDay()];
 }
+function compareItinerary(a,b){
+  return String(a.time||'24:00').localeCompare(String(b.time||'24:00'))||(a.order??99)-(b.order??99);
+}
 function renderItinerary(){
   const dates=allDates();
   if(!dates.includes(activeDate))activeDate=dates[0];
   document.getElementById('dateTabs').innerHTML=dates.map(d=>`<button class="date-tab ${d===activeDate?'active':''}" onclick="setActiveDate('${d}')">${dateCN(d)}</button>`).join('');
 
+  const cover=document.getElementById('dayCover');
+  cover.innerHTML=dayCoverMarkup(activeDate);
+  cover.hidden=!DAY_COVERS[activeDate];
+
   const dayPlaces=places.filter(p=>p.date===activeDate).map(p=>({...p,kind:'place'}));
   const dayEvents=tripEvents.filter(e=>e.date===activeDate).map(e=>({...e,kind:'event'}));
-  const items=[...dayPlaces,...dayEvents].sort((a,b)=>(a.order??99)-(b.order??99)||String(a.time||'').localeCompare(String(b.time||'')));
+  const items=[...dayPlaces,...dayEvents].sort(compareItinerary);
 
   const city=(dayPlaces[0]?.city||dayEvents[0]?.city||'');
   document.getElementById('dayTitle').textContent=`${dateCN(activeDate)} · ${weekdayCN(activeDate)}`;
@@ -670,9 +808,10 @@ function renderItinerary(){
 }
 function setActiveDate(d){activeDate=d;renderItinerary()}
 function movePlace(id,dir){
-  const items=places.filter(p=>p.date===activeDate).sort((a,b)=>(a.order??99)-(b.order??99));
+  const items=places.filter(p=>p.date===activeDate).sort(compareItinerary);
   const index=items.findIndex(p=>p.id===id), target=index+dir;
   if(index<0||target<0||target>=items.length)return;
+  if((items[index].time||'')!==(items[target].time||'')){showToast('已设时间的地点按时间排列，请编辑时间调整顺序');return}
   items.forEach((p,i)=>p.order=i+1);
   const temp=items[index].order;items[index].order=items[target].order;items[target].order=temp;
   persist();renderItinerary();showToast('景点顺序已调整');
@@ -718,7 +857,7 @@ function renderPlaces(){
   const el=document.getElementById('placesGrid');
   el.innerHTML=filtered.length?filtered.map(p=>`
     <article class="card place">
-      <div class="cover" style="background-image:url('${escapeAttr(p.images?.[0]||'')}')"></div>
+      <div class="cover" role="img" aria-label="${escapeAttr(p.name)} 封面" style="background-image:url('${escapeAttr(coverForPlace(p))}')"></div>
       <div class="place-body">
         <div class="meta">${escapeHtml(p.category)} · ${escapeHtml(p.city)} · ${p.date?dateCN(p.date):'待规划'}</div>
         <h3>${escapeHtml(p.name)}</h3>
@@ -734,7 +873,9 @@ function renderPlaces(){
 function openPlace(id){
   const p=places.find(x=>x.id===id); if(!p)return;
   const cover=document.getElementById('drawerCover');
-  cover.style.backgroundImage=p.images?.[0]?`url('${escapeAttr(p.images[0])}')`:'none';
+  cover.style.backgroundImage=`url('${escapeAttr(coverForPlace(p))}')`;
+  cover.setAttribute('role','img');
+  cover.setAttribute('aria-label',`${p.name} 封面`);
   const blocks=(p.blocks||[]).map(b=>{
     if(b.type==='image')return `<div class="note-block">${b.src?`<img src="${escapeAttr(b.src)}" alt="">`:''}${b.text?`<div class="note-caption">${escapeHtml(b.text)}</div>`:''}</div>`;
     return `<div class="note-block"><div class="note-text">${escapeHtml(b.text||'')}</div></div>`;
@@ -745,7 +886,7 @@ function openPlace(id){
     <div class="subline">${escapeHtml(p.address||'暂无地址')}</div>
     <div class="subline">${p.rating?`评分 ${escapeHtml(p.rating)} · ${Number(p.reviews||0).toLocaleString('zh-CN')} 条评价`:''}${p.price?` · ${escapeHtml(p.price)}`:''}${p.sourceCategory?` · ${escapeHtml(p.sourceCategory)}`:''}</div>
     <div class="tag-row">${(p.tags||[]).map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join('')}</div>
-    ${p.maps?`<a class="map-link" href="${escapeAttr(p.maps)}" target="_blank">在 Google Maps 中打开 ↗</a>`:''}
+    ${(p.maps||p.xhsLink)?`<div class="place-links">${p.maps?`<a class="map-link" href="${escapeAttr(p.maps)}" target="_blank" rel="noopener">在 Google Maps 中打开 ↗</a>`:''}${p.xhsLink?`<a class="xhs-link" href="${escapeAttr(p.xhsLink)}" target="_blank" rel="noopener">查看小红书帖子 ↗</a>`:''}</div>`:''}
     ${p.planNote?`<div class="detail-box" style="margin:14px 0"><label>规划备注</label><b>${escapeHtml(p.planNote)}</b></div>`:''}
     <div class="detail-grid">
       <div class="detail-box"><label>安排日期</label><b>${dateCN(p.date)} · ${escapeHtml(p.time||'未设时间')}</b></div>
@@ -788,6 +929,8 @@ function editPlace(id){
   document.getElementById('fDate').value=p.date||'';
   document.getElementById('fTime').value=p.time||'';
   document.getElementById('fMaps').value=p.maps||'';
+  document.getElementById('fXhs').value=p.xhsLink||'';
+  validateXhsLink();
   document.getElementById('fAddress').value=p.address||'';
   document.getElementById('fWhy').value=p.why||'';
   document.getElementById('fTags').value=(p.tags||[]).join(', ');
@@ -799,16 +942,19 @@ function editPlace(id){
 function savePlace(){
   const name=document.getElementById('fName').value.trim();
   if(!name){showToast('请先填写地点名称');return}
+  if(!validateXhsLink()){document.getElementById('fXhs').focus();return}
   const id=document.getElementById('editingId').value;
   const existing=id?places.find(p=>p.id===id):null;
   const date=document.getElementById('fDate').value;
   const p={
+    ...existing,
     id:id||'p_'+Date.now(),name,
     city:document.getElementById('fCity').value,
     category:document.getElementById('fCategory').value,
     duration:document.getElementById('fDuration').value.trim(),
     date,time:document.getElementById('fTime').value,
     maps:document.getElementById('fMaps').value.trim()||'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(name),
+    xhsLink:document.getElementById('fXhs').value.trim(),
     address:document.getElementById('fAddress').value.trim(),
     why:document.getElementById('fWhy').value.trim(),
     tags:document.getElementById('fTags').value.split(/[,，]/).map(x=>x.trim()).filter(Boolean),
@@ -817,13 +963,31 @@ function savePlace(){
     order:existing?.order??(places.filter(x=>x.date===date).length+1)
   };
   if(existing)places=places.map(x=>x.id===id?p:x);else places.push(p);
-  persist();closePlaceModal();renderAll();activeDate=date||activeDate;showToast(existing?'地点已更新':'地点已添加');
+  persist();closePlaceModal();activeDate=date||activeDate;renderAll();showToast(existing?'地点已更新':'地点已添加');
 }
 function clearPlaceForm(){
   document.getElementById('editingId').value='';
-  ['fName','fDuration','fMaps','fAddress','fWhy','fTags','fNotes','fImages','fChecklist'].forEach(id=>document.getElementById(id).value='');
+  ['fName','fDuration','fMaps','fXhs','fAddress','fWhy','fTags','fNotes','fImages','fChecklist'].forEach(id=>document.getElementById(id).value='');
+  validateXhsLink();
   document.getElementById('fCity').value='哥本哈根';document.getElementById('fCategory').value='博物馆';
   document.getElementById('fDate').value='';document.getElementById('fTime').value='';
+}
+function validateXhsLink(){
+  const input=document.getElementById('fXhs');
+  const error=document.getElementById('fXhsError');
+  if(!input||!error)return true;
+  const value=input.value.trim();
+  let valid=!value;
+  if(value){
+    try{
+      const url=new URL(value);
+      const host=url.hostname.toLowerCase().replace(/^www\./,'');
+      valid=(url.protocol==='https:'||url.protocol==='http:')&&(host==='xiaohongshu.com'||host.endsWith('.xiaohongshu.com')||host==='xhslink.com'||host.endsWith('.xhslink.com'));
+    }catch(e){valid=false}
+  }
+  input.setAttribute('aria-invalid',valid?'false':'true');
+  if(valid)error.classList.remove('show');else error.classList.add('show');
+  return valid;
 }
 function lines(id){return document.getElementById(id).value.split('\n').map(x=>x.trim()).filter(Boolean)}
 function duplicatePlace(id){
@@ -880,7 +1044,7 @@ function saveExpense(){
   const currency=document.getElementById('eCurrency').value;
   const paidBy=document.getElementById('ePaidBy').value;
   const participants=[...document.querySelectorAll('.participant:checked')].map(x=>x.value);
-  if(!item||amount<=0){showToast('请填写项目和有效金额');return}
+  if(!item||!Number.isFinite(amount)||amount<=0){showToast('请填写项目和有效金额');return}
   if(!participants.length){showToast('至少选择 1 位参与人');return}
   expenses.push({
     id:'e_'+Date.now(),
@@ -956,6 +1120,12 @@ function renderSettlement(normalized){
     list.innerHTML=tx.length?tx.map(t=>`<div class="settlement-row"><div><b>${escapeHtml(t.from)} → ${escapeHtml(t.to)}</b><br><span>最终人民币转账</span></div><strong>¥${t.amount.toFixed(2)}</strong></div>`).join(''):'<div class="empty" style="padding:26px">'+(normalized.length?'当前账目已平衡，无需互相转账':'录入费用后，这里会自动生成最简人民币转账方案。')+'</div>';
   }
 }
+function updateTaxChecklist(){
+  const items=[...document.querySelectorAll('#taxGuide input[type="checkbox"]')];
+  const done=items.filter(item=>item.checked).length;
+  const count=document.getElementById('taxChecklistCount');
+  if(count)count.textContent=`${done}/${items.length}`;
+}
 function exportData(){
   const data={trip:'北欧 2026',exportedAt:new Date().toISOString(),travelers,fxRates,places,tripEvents,tripAssets,expenses};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
@@ -973,10 +1143,52 @@ function showToast(msg){
 }
 function escapeHtml(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function escapeAttr(s=''){return escapeHtml(s)}
+const COVER_ASSET_VERSION='2026-09-25-gmaps-covers-v3';
+const PHOTO_COVER_IDS=new Set('frederiks-church intake-aben intake-akershus intake-amator intake-ambra intake-audo intake-dac intake-design-market intake-elan intake-ferm-living intake-finn-juhl intake-frama intake-grunerlokka intake-hantverket intake-hart-1 intake-hart-2 intake-hooked intake-juno intake-lennart-bror intake-mad-kaffe intake-medieval intake-mjol intake-montana intake-netto intake-nobel intake-posterland intake-prolog intake-rains intake-skansen intake-skultuna-1 intake-skultuna-2 intake-studio-arhoj intake-svedjan intake-torvehallerne oslo-city-hall round-tower vasa'.split(' '));
+const PHOTO_COVER_OVERRIDES={
+  'nobel-peace':'intake-nobel-peace',
+  'gamla-stan':'intake-gamla-stan',
+  'royal-palace-stockholm':'intake-royal-palace-stockholm',
+  'stortorget':'intake-stortorget',
+  'riddarholmen':'intake-riddarholmen',
+  'vasa':'vasa',
+  'abba':'intake-abba',
+  'djurgarden':'intake-djurgarden',
+  'stockholm-city-hall':'intake-stockholm-city-hall',
+  'stockholm-center':'intake-stockholm-central'
+};
+const HD_PLACE_COVERS={"frederiks-church": "assets/places-hd/frederiks-church.jpg", "amalienborg": "assets/places-hd/amalienborg.jpg", "designmuseum": "assets/places-hd/designmuseum.jpg", "little-mermaid": "assets/places-hd/little-mermaid.jpg", "copenhagen-old-town": "assets/places-hd/copenhagen-old-town.jpg", "stroget": "assets/places-hd/stroget.jpg", "hayhouse": "assets/places-hd/hayhouse.jpg", "glyptotek": "assets/places-hd/glyptotek.jpg", "grundtvig": "assets/places-hd/grundtvig.jpg", "oslo-opera": "assets/places-hd/oslo-opera.jpg", "munch": "assets/places-hd/munch.jpg", "bjorvika": "assets/places-hd/bjorvika.jpg", "fuglen": "assets/places-hd/fuglen.jpg", "oslo-cathedral": "assets/places-hd/oslo-cathedral.jpg", "royal-palace-oslo": "assets/places-hd/royal-palace-oslo.jpg", "oslo-city-hall": "assets/places-hd/oslo-city-hall.jpg", "gamla-stan": "assets/places-hd/gamla-stan.jpg", "riddarholmen": "assets/places-hd/riddarholmen.jpg", "vasa": "assets/places-hd/vasa.jpg", "abba": "assets/places-hd/abba.jpg", "djurgarden": "assets/places-hd/djurgarden.jpg", "stockholm-city-hall": "assets/places-hd/stockholm-city-hall.jpg", "stockholm-center": "assets/places-hd/stockholm-center.jpg", "intake-ambra": "assets/places-hd/intake-ambra.jpg", "intake-skultuna-1": "assets/places-hd/intake-skultuna-1.jpg", "intake-skultuna-2": "assets/places-hd/intake-skultuna-2.jpg", "intake-hantverket": "assets/places-hd/intake-hantverket.jpg", "intake-lennart-bror": "assets/places-hd/intake-lennart-bror.jpg", "intake-posterland": "assets/places-hd/intake-posterland.jpg", "intake-akershus": "assets/places-hd/intake-akershus.jpg", "intake-frama": "assets/places-hd/intake-frama.jpg", "intake-design-market": "assets/places-hd/intake-design-market.jpg", "intake-studio-arhoj": "assets/places-hd/intake-studio-arhoj.jpg", "intake-ferm-living": "assets/places-hd/intake-ferm-living.jpg", "intake-finn-juhl": "assets/places-hd/intake-finn-juhl.jpg", "intake-audo": "assets/places-hd/intake-audo.jpg", "intake-hooked": "assets/places-hd/intake-hooked.jpg", "intake-netto": "assets/places-hd/intake-netto.jpg", "intake-torvehallerne": "assets/places-hd/intake-torvehallerne.jpg", "intake-balue": "assets/places-hd/intake-balue.jpg", "intake-den-glade-gris": "assets/places-hd/intake-den-glade-gris.jpg", "intake-tavernahn": "assets/places-hd/intake-tavernahn.jpg", "intake-mamma-pizza": "assets/places-hd/intake-mamma-pizza.jpg", "intake-grunerlokka": "assets/places-hd/intake-grunerlokka.jpg", "intake-mjol": "assets/places-hd/intake-mjol.jpg", "intake-elan": "assets/places-hd/intake-elan.jpg", "intake-hart-1": "assets/places-hd/intake-hart-1.jpg", "intake-prolog": "assets/places-hd/intake-prolog.jpg", "intake-juno": "assets/places-hd/intake-juno.jpg", "intake-mad-kaffe": "assets/places-hd/intake-mad-kaffe.jpg", "intake-amator": "assets/places-hd/intake-amator.jpg", "intake-aben": "assets/places-hd/intake-aben.jpg", "intake-rains": "assets/places-hd/intake-rains.jpg", "intake-medieval": "assets/places-hd/intake-medieval.jpg", "intake-nobel": "assets/places-hd/intake-nobel.jpg", "intake-svedjan": "assets/places-hd/intake-svedjan.jpg", "intake-montana": "assets/places-hd/intake-montana.jpeg", "intake-hart-2": "assets/places-hd/intake-hart-2.jpeg", "intake-dac": "assets/places-hd/intake-dac.jpeg", "intake-skansen": "assets/places-hd/intake-skansen.jpg", "stortorget": "assets/places-hd/stortorget.jpeg", "royal-palace-stockholm": "assets/places-hd/royal-palace-stockholm.webp", "nobel-peace": "assets/places-hd/nobel-peace.jpeg", "round-tower": "assets/places-hd/round-tower.jpg", "nyhavn": "assets/places-hd/nyhavn.jpg", "karl-johans": "assets/places-hd/karl-johans.jpg"};
+function coverForPlace(p){
+  if(HD_PLACE_COVERS[p?.id])return HD_PLACE_COVERS[p.id];
+  const override=PHOTO_COVER_OVERRIDES[p?.id];
+  if(override)return `assets/photos/${encodeURIComponent(override)}.jpg?v=${COVER_ASSET_VERSION}`;
+  if(p?.id&&PHOTO_COVER_IDS.has(p.id))return `assets/photos/${encodeURIComponent(p.id)}.jpg?v=${COVER_ASSET_VERSION}`;
+  return p?.images?.[0]||'';
+}
 
 function mapSearch(name,city){return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(name+' '+city)}
+const ITINERARY_REMOVAL_KEY='travel_remove_finn_abba_20260926_v1';
+function removeCancelledStops(list){
+  const cancelled={'intake-finn-juhl':'2026-10-01','abba':'2026-10-08'};
+  list.forEach(p=>{
+    if(cancelled[p.id]&&p.date===cancelled[p.id]){p.date='';p.time='';p.order=99;}
+  });
+  return list;
+}
+const LOCATION_FIX_KEY='travel_place_locations_balue_ambra_20260926_v1';
+const VERIFIED_PLACE_LOCATIONS={"intake-balue": {"city": "斯德哥尔摩", "country": "瑞典", "address": "Nackagatan 5, 116 49 Stockholm, Sweden", "locationSource": "https://www.visitstockholm.com/o/balue/", "maps": "https://www.google.com/maps/search/?api=1&query=Balue%20Nackagatan%205%2C%20116%2049%20Stockholm%2C%20Sweden", "locationVerifiedAt": "2026-09-26"}, "intake-ambra": {"city": "哥本哈根", "country": "丹麦", "address": "Store Kongensgade 59, 1264 København K, Denmark", "locationSource": "https://ambra.dk/en/", "maps": "https://www.google.com/maps/search/?api=1&query=Ambra%20Store%20Kongensgade%2059%2C%201264%20K%C3%B8benhavn%20K%2C%20Denmark", "locationVerifiedAt": "2026-09-26"}};
+const BALUE_PLAN_NOTE='斯德哥尔摩 Södermalm 咖啡备选，顺路时安排';
+function correctPlaceLocations(list){
+  list.forEach(p=>{
+    const fix=VERIFIED_PLACE_LOCATIONS[p.id];
+    if(!fix)return;
+    Object.assign(p,fix);
+    if(p.id==='intake-balue'&&p.planNote==='沿途机动点，不单独绕路')p.planNote=BALUE_PLAN_NOTE;
+  });
+  return list;
+}
 const intakeRows=[
-  ['intake-ambra','Ambra','斯德哥尔摩','餐厅',4.1,375,'kr 300–900','意大利风味','Google Maps 收藏；截图显示意大利风味餐厅。','感兴趣,待规划,截图收藏,意大利风味'],
+  ['intake-ambra','Ambra','哥本哈根','餐厅',4.1,375,'kr 300–900','意大利风味','Google Maps 收藏；截图显示意大利风味餐厅。','感兴趣,待规划,截图收藏,意大利风味'],
   ['intake-skultuna-1','Skultuna Store（分店 1）','斯德哥尔摩','购物',4.8,26,'','商店','Google Maps 收藏；与另一家同名门店分开保留。','感兴趣,待规划,截图收藏,设计'],
   ['intake-skultuna-2','Skultuna Store（分店 2）','斯德哥尔摩','购物',5.0,12,'','珠宝行','Google Maps 收藏；与另一家同名门店分开保留。','感兴趣,待规划,截图收藏,珠宝'],
   ['intake-skansen','斯堪森（Skansen）','斯德哥尔摩','景观',4.5,36008,'','露天博物馆','Google Maps 收藏；斯德哥尔摩露天博物馆与历史街区。','感兴趣,待规划,截图收藏,露天博物馆'],
@@ -995,7 +1207,7 @@ const intakeRows=[
   ['intake-hooked','Hooked','哥本哈根','餐厅',4.5,510,'kr 200–300','海鲜','Google Maps 收藏；海鲜餐厅。','感兴趣,待规划,截图收藏,海鲜'],
   ['intake-netto','Netto','哥本哈根','购物',3.8,454,'','杂货店','Google Maps 收藏；当地日常杂货店。','感兴趣,待规划,截图收藏,杂货'],
   ['intake-torvehallerne','TorvehallerneKBH','哥本哈根','购物',4.5,16769,'','生鲜市场','Google Maps 收藏；哥本哈根室内生鲜与美食市场。','感兴趣,待规划,截图收藏,市场,生鲜'],
-  ['intake-balue','Balue','哥本哈根','咖啡',4.7,193,'kr 100–200','咖啡馆','Google Maps 收藏；咖啡馆。','感兴趣,待规划,截图收藏,咖啡'],
+  ['intake-balue','Balue','斯德哥尔摩','咖啡',4.7,193,'kr 100–200','咖啡馆','Google Maps 收藏；咖啡馆。','感兴趣,待规划,截图收藏,咖啡'],
   ['intake-den-glade-gris','Den Glade Gris','奥斯陆','餐厅',4.6,5475,'kr 300–700','传统挪威餐厅','Google Maps 收藏；传统挪威餐厅。','感兴趣,待规划,截图收藏,挪威风味'],
   ['intake-tavernahn',"Taverna'n",'奥斯陆','餐厅',4.2,1137,'kr 200–500','餐馆','Google Maps 收藏；奥斯陆餐馆。','感兴趣,待规划,截图收藏,餐厅'],
   ['intake-mamma-pizza','Mamma Pizza','奥斯陆','餐厅',4.6,6817,'kr 200–400','披萨','Google Maps 收藏；披萨餐厅。','感兴趣,待规划,截图收藏,披萨'],
@@ -1015,6 +1227,7 @@ const intakeRows=[
   ['intake-svedjan','Svedjan Bageri','斯德哥尔摩','咖啡',4.6,1017,'kr 100–200','咖啡馆','Google Maps 收藏；咖啡馆与烘焙店。','感兴趣,待规划,截图收藏,烘焙']
 ];
 const intakePlaces=intakeRows.map(([id,name,city,category,rating,reviews,price,sourceCategory,why,tagText])=>({id,name,city,category,rating:rating||null,reviews:reviews||null,price:price||'',sourceCategory,tags:tagText.split(','),why,notes:[rating?`评分 ${rating} · ${Number(reviews).toLocaleString('zh-CN')} 条评价`:'截图未显示评分',price?`价格区间：${price}`:`截图类别：${sourceCategory}`],maps:mapSearch(name.replace(/（分店 [12]）/,'') ,city==='斯德哥尔摩'?'Stockholm':city==='奥斯陆'?'Oslo':'Copenhagen'),date:'',time:'',duration:'',order:99,address:'',images:[],blocks:[],checklist:[]}));
+correctPlaceLocations(intakePlaces);
 const importedHotelPattern=/酒店|hotel|hobo|sheraton|sp34|citybox|radisson|locke|mayfair|1 hotel|scandic|喜来登|克拉利奥|梅费尔/i;
 const importedDuplicateNames=['瓦萨沉船博物馆','圆塔','腓特烈教堂','丹麦艺术与设计博物馆','奥斯陆皇宫','奥斯陆市政厅','Fuglen 咖啡店','中央车站','邮轮码头','Go Nordic Cruiseline | Oslo'];
 function normalizeImportedName(name){return String(name||'').toLowerCase().replace(/[\s·（）()\-–—]/g,'')}
@@ -1035,7 +1248,6 @@ function applyFinalPlan(list){
   set('新港','2026-10-01','09:30',1);
   set('腓特烈教堂','2026-10-01','10:10',2);
   set('阿美琳堡宫区域','2026-10-01','10:40',3);
-  set('House of Finn Juhl','2026-10-01','11:30',4);
   set('Frama','2026-10-01','13:15',5);
   set('Montana','2026-10-01','13:15',5);
   set('丹麦艺术与设计博物馆','2026-10-01','14:15',6);
@@ -1043,7 +1255,7 @@ function applyFinalPlan(list){
   set('Hooked','2026-10-01','19:00',8);
   note('Frama','与 Montana 二选一，不必两家都去','🟡 出发前核实');
   note('Montana','与 Frama 二选一，不必两家都去','🟡 出发前核实');
-  note('House of Finn Juhl','设计主线；出发前确认展厅开放和是否需要预约','🟡 出发前核实');
+  note('House of Finn Juhl','备选地点；前往前确认展厅开放和是否需要预约','🟡 出发前核实');
   note('丹麦艺术与设计博物馆','安排在设计店之后；出发前核实当天开放时间并提前购票','🟡 出发前核实');
   note('Hooked','晚餐候选，建议提前订位','🟠 建议预约');
 
@@ -1075,7 +1287,9 @@ function applyFinalPlan(list){
   note('Ferm Living','与 Design Market 二选一；不单独绕路','🟡 出发前核实');
   note('Design Market','与 Ferm Living 二选一；不单独绕路','🟡 出发前核实');
   note('Audo House','靠近北部设计街区和邮轮方向；出发前确认开放时间','🟡 出发前核实');
-  ['Hart（分店 1）','Hart（分店 2）','Balue','Netto'].forEach(name=>note(name,'沿途机动点，不单独绕路','○ 顺路机动'));
+  ['Hart（分店 1）','Hart（分店 2）','Netto'].forEach(name=>note(name,'沿途机动点，不单独绕路','○ 顺路机动'));
+
+  note('Balue',BALUE_PLAN_NOTE,'○ 顺路机动');
 
   set('阿克斯胡斯城堡（Akershus Fortress）','2026-10-04','11:15',1);
   set('Mamma Pizza','2026-10-04','12:30',2);
@@ -1118,10 +1332,9 @@ function applyFinalPlan(list){
   set('瓦萨沉船博物馆','2026-10-08','10:00',1);
   set('斯堪森（Skansen）','2026-10-08','12:15',2);
   set('Djurgården 岛区域','2026-10-08','17:00',4);
-  set('ABBA 博物馆','2026-10-08','15:00',3);
   note('瓦萨沉船博物馆','建议安排 10:00–11:45；出发前核实最终开放时间并提前购票','🟡 出发前核实');
-  note('斯堪森（Skansen）','当天较早结束，必须放在 ABBA 前；出发前核实最终开放时间','🟡 出发前核实');
-  note('ABBA 博物馆','必须提前购买带指定入场时间的门票，目标 15:00 左右','🔴 需提前预约');
+  note('斯堪森（Skansen）','当天较早结束；出发前核实最终开放时间','🟡 出发前核实');
+  note('ABBA 博物馆','备选地点；如计划前往，需提前购买指定入场时间门票','🔴 需提前预约');
   note('Djurgården 岛区域','作为博物馆日的散步和返程缓冲，不再额外安排新馆');
 
   set('斯德哥尔摩市政厅','2026-10-09','10:00',1);
@@ -1132,11 +1345,16 @@ function applyFinalPlan(list){
   if(medieval){medieval.date='';medieval.time='';medieval.order=99;medieval.planNote='截图显示暂时停业，本次不纳入 Plan A'}
   note('斯德哥尔摩市政厅','必须提前预约 Guided Tour，目标 10 月 9 日 10:00 英文场','🔴 需提前预约');
   note('斯德哥尔摩市中心','返程前自由活动，不要排满；约 15:30 前往阿兰达机场');
-  return list;
+  return removeCancelledStops(list);
 }
-places=mergeImportedPlaces(places);
+// Only seed a fresh browser; saved edits and deletions are authoritative.
+if(places===defaultPlaces)places=mergeImportedPlaces(JSON.parse(JSON.stringify(defaultPlaces)));
 if(localStorage.getItem(FINAL_PLAN_VERSION)!==FINAL_PLAN_VERSION){places=applyFinalPlan(places);localStorage.setItem(FINAL_PLAN_VERSION,FINAL_PLAN_VERSION)}
+if(localStorage.getItem(LOCATION_FIX_KEY)!=='1')correctPlaceLocations(places);
+if(localStorage.getItem(ITINERARY_REMOVAL_KEY)!=='1')removeCancelledStops(places);
 persist();
+localStorage.setItem(LOCATION_FIX_KEY,'1');
+localStorage.setItem(ITINERARY_REMOVAL_KEY,'1');
 renderAll();
 </script>
 </body>
