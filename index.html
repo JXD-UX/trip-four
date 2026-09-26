@@ -100,7 +100,8 @@
     .event-kind{display:inline-flex;margin-bottom:7px;padding:4px 7px;border-radius:999px;background:#f1f3f6;color:#555d68;font-size:10px;font-weight:800;letter-spacing:.05em}
 
     .expense-summary{grid-template-columns:repeat(4,1fr)}
-    .money{font-size:28px;font-weight:800}
+    .money{min-width:0;font-size:clamp(21px,2.2vw,28px);font-weight:800;overflow-wrap:anywhere}
+    .expense-table-wrap{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
     .expense-table{width:100%;border-collapse:collapse}
     .expense-table th,.expense-table td{text-align:left;padding:13px 10px;border-bottom:1px solid var(--line);font-size:14px}
     .expense-table th{color:var(--muted);font-size:12px}.table-action{border:0;background:transparent;color:#8b3434;font-weight:650}
@@ -251,7 +252,20 @@
       .drawer-panel{width:100%}.drawer-cover{height:210px}.drawer-content{padding:20px}.drawer-content h2{font-size:25px;line-height:1.25}.detail-box b{font-size:14px;line-height:1.5}.drawer-actions{gap:8px}.drawer-actions button,.drawer-actions a{min-height:44px}
       .modal{padding:10px}.modal-card{padding:17px;border-radius:16px;max-height:calc(100dvh - 20px)}.modal-head h2{font-size:20px}.form-actions{flex-direction:column-reverse}.form-actions button{width:100%;min-height:46px}
       .people-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.person-check{min-height:44px}
-      .expense-table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}.expense-table th,.expense-table td{padding:12px 9px}
+      .fx-row{display:grid;grid-template-columns:minmax(0,1fr) auto}
+      .expense-table-wrap{overflow:visible}
+      .expense-table{display:block;min-width:0;border-collapse:separate}
+      .expense-table thead{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+      .expense-table tbody,.expense-table tr,.expense-table td{display:block;width:100%}
+      .expense-table tbody{display:grid;gap:12px}
+      .expense-table tr{padding:5px 14px;border:1px solid var(--line);border-radius:13px;background:var(--soft)}
+      .expense-table td{display:grid;grid-template-columns:82px minmax(0,1fr);gap:10px;align-items:start;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px;line-height:1.45;overflow-wrap:anywhere}
+      .expense-table td::before{content:attr(data-label);color:var(--muted);font-size:12px;font-weight:700}
+      .expense-table td:last-child{border-bottom:0}
+      .expense-table td[data-label="操作"]{align-items:center}
+      .expense-table .expense-empty{display:block;padding:28px 8px!important;text-align:center!important;border:0}
+      .expense-table .expense-empty::before{content:none}
+      .table-action{min-width:72px;min-height:44px;justify-self:start;border:1px solid #ead4d4;border-radius:10px;background:#fffafa;padding:8px 12px}
       .settlement-row{align-items:flex-start;flex-direction:column;gap:4px}
     }
     @media(max-width:480px){
@@ -444,10 +458,12 @@
 
       <div class="card section">
         <div class="section-head"><h2>费用明细</h2><small>保留原币金额，同时显示人民币折算值</small></div>
+        <div class="expense-table-wrap">
         <table class="expense-table">
           <thead><tr><th>日期</th><th>分类</th><th>项目</th><th>付款人</th><th>参与人</th><th>原币金额</th><th>人民币</th><th></th></tr></thead>
           <tbody id="expenseBody"></tbody>
         </table>
+        </div>
       </div>
 
       <div class="card section">
@@ -1078,15 +1094,15 @@ function renderExpenses(){
 
   const body=document.getElementById('expenseBody');
   if(body)body.innerHTML=normalized.length?normalized.map(e=>`<tr>
-    <td>${dateCN(e.date)}</td>
-    <td>${escapeHtml(e.category)}</td>
-    <td>${escapeHtml(e.item)}</td>
-    <td>${escapeHtml(e.paidBy)}</td>
-    <td>${escapeHtml(e.participants.join('、'))}</td>
-    <td><span class="currency-badge">${e.currency}</span> ${currencySymbol(e.currency)}${Number(e.amount).toFixed(2)}</td>
-    <td>¥${e.cny.toFixed(2)}<div class="rmb-note">汇率 ${Number(fxRates[e.currency]||1).toFixed(4)}</div></td>
-    <td><button class="table-action" onclick="deleteExpense('${e.id}')">删除</button></td>
-  </tr>`).join(''):'<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:35px">还没有费用记录</td></tr>';
+    <td data-label="日期">${dateCN(e.date)}</td>
+    <td data-label="分类">${escapeHtml(e.category)}</td>
+    <td data-label="项目">${escapeHtml(e.item)}</td>
+    <td data-label="付款人">${escapeHtml(e.paidBy)}</td>
+    <td data-label="参与人">${escapeHtml(e.participants.join('、'))}</td>
+    <td data-label="原币金额"><span><span class="currency-badge">${e.currency}</span> ${currencySymbol(e.currency)}${Number(e.amount).toFixed(2)}</span></td>
+    <td data-label="人民币"><span>¥${e.cny.toFixed(2)}<span class="rmb-note">汇率 ${Number(fxRates[e.currency]||1).toFixed(4)}</span></span></td>
+    <td data-label="操作"><button class="table-action" onclick="deleteExpense('${e.id}')">删除</button></td>
+  </tr>`).join(''):'<tr><td class="expense-empty" colspan="8">还没有费用记录</td></tr>';
 
   renderSettlement(normalized);
 }
